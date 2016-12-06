@@ -1,36 +1,45 @@
 package jus.proc.prodcons.v1;
 
-import jus.poc.prodcons.Message;
-import jus.poc.prodcons.Tampon;
-import jus.poc.prodcons._Consommateur;
-import jus.poc.prodcons._Producteur;
+import jus.poc.prodcons.Acteur;
+import jus.poc.prodcons.ControlException;
+import jus.poc.prodcons.Observateur;
 
-public class Consommateur implements Tampon {
-	
-	int nbMessage = 0;
+public class Consommateur extends Acteur implements jus.poc.prodcons._Consommateur{
+
+	protected Consommateur(int type, Observateur observateur, int moyenneTempsDeTraitement,
+			int deviationTempsDeTraitement) throws ControlException {
+		super(type, observateur, moyenneTempsDeTraitement, deviationTempsDeTraitement);
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
-	public int enAttente() {
+	public int deviationTempsDeTraitement() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public synchronized Message get(_Consommateur arg0) throws Exception, InterruptedException {
+	public int identification() {
 		// TODO Auto-generated method stub
-		return null;
+		return 0;
 	}
 
 	@Override
-	public synchronized void put(_Producteur arg0, Message arg1) throws Exception, InterruptedException {
+	public int moyenneTempsDeTraitement() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int nombreDeMessages() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void run() {
 		// TODO Auto-generated method stub
 		
 	}
-
-	@Override
-	public int taille() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
+	
 }
