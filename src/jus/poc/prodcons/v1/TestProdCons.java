@@ -80,7 +80,10 @@ public class TestProdCons extends Simulateur {
 	}*/
 	
 	
-	
+	public enum TypeActeur {
+		PRODUCTEUR,
+		CONSOMMATEUR;
+	}
 	
 	
 	
