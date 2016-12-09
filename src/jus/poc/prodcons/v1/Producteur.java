@@ -64,8 +64,6 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 			//cr�er le msg � envoyer : type, id, n�Msg
 			MessageX msgCurrent = new MessageX(TypeActeur.PRODUCTEUR, identification(), i);
 			
-			//on doit d�poser le message dans le tampon
-			//puis on attendre un temps al�atoire
 			try {
 				tampon.put(this, (Message)(msgCurrent));
 				sleep(alea.next());
