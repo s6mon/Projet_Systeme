@@ -55,17 +55,17 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 		int i;
 		Aleatoire alea = new Aleatoire(moyenneTempsDeTraitement, deviationTempsDeTraitement);
 		// TODO
-		//on doit initialiser toutes nos constantes nb msg à
+		//on doit initialiser toutes nos constantes nb msg ï¿½
 		nbMsgToSend = nombreDeMessages();
 		
 		//envoyer les nbMsgToSend
 		for(i=nbMsgToSend; i > 0; i--){
 			
-			//créer le msg à envoyer : type, id, n°Msg
+			//crï¿½er le msg ï¿½ envoyer : type, id, nï¿½Msg
 			MessageX msgCurrent = new MessageX(TypeActeur.PRODUCTEUR, identification(), i);
 			
-			//on doit déposer le message dans le tampon
-			//puis on attendre un temps aléatoire
+			//on doit dï¿½poser le message dans le tampon
+			//puis on attendre un temps alï¿½atoire
 			try {
 				tampon.put(this, (Message)(msgCurrent));
 				sleep(alea.next());
@@ -79,7 +79,7 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 		
 		
 		
-		//this.moniteur.put(this, new Message("message")); moniteur correspond à tampon
+		//this.moniteur.put(this, new Message("message")); moniteur correspond ï¿½ tampon
 	}
 
 }
