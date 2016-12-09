@@ -24,7 +24,7 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 			int deviationTempsDeTraitement, int nbMessage, Tampon tampon) 
 			throws ControlException {
 		
-		super(type, observateur, moyenneTempsDeTraitement, deviationTempsDeTraitement);
+		super(Acteur.typeProducteur, observateur, moyenneTempsDeTraitement, deviationTempsDeTraitement);
 		
 		// TODO Auto-generated constructor stub
 		this.nbMoyenMessage = nbMoyenMessage;
@@ -44,12 +44,15 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 		int i = 0;
 		Aleatoire aleaWait = new Aleatoire(moyenneTempsDeTraitement, deviationTempsDeTraitement);
 		boolean lastMsg = false;
+		System.out.println("on doit créé "+nombreDeMessages()+"msg");
 		
 		//envoyer les nbMsgToSend
 		while(i < nombreDeMessages()){
 			
 			try {
 				MessageX msgCurrent = new MessageX(identification(), i, lastMsg);
+				System.out.println("msg créé dans prod");
+				System.out.println(msgCurrent.toString());
 				tampon.put(this, (Message)(msgCurrent));
 				sleep(aleaWait.next());
 			} catch (Exception e) {
@@ -57,6 +60,7 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 			}
 			i++;
 		}
+		System.out.println("on sort du while");
 		
 		
 		

@@ -16,10 +16,10 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 
 	protected Consommateur(int type, Observateur observateur, int moyenneTempsDeTraitement,
 			int deviationTempsDeTraitement, Tampon tampon)
-					
+				
 		throws ControlException {
-		
-		super(type, observateur, moyenneTempsDeTraitement, deviationTempsDeTraitement);
+		super(Acteur.typeConsommateur, observateur, moyenneTempsDeTraitement, deviationTempsDeTraitement);
+		System.out.println("constructeur cons");
 		// TODO Auto-generated constructor stub
 		this.type = type;
 		this.moyenneTempsDeTraitement = moyenneTempsDeTraitement;
@@ -34,6 +34,7 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 	}
 
 	public void run() {
+		System.out.println("on cré cons");
 		boolean fin = false;
 		MessageX msgRecut;
 		Aleatoire aleaWait = new Aleatoire(moyenneTempsDeTraitement, deviationTempsDeTraitement);
@@ -42,7 +43,7 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 			
 			try {
 				msgRecut = (MessageX) tampon.get(this);
-				System.out.println("Consommateur : "+identification()+msgRecut.toString());
+				System.out.println("Consommateur : "+identification()+"lit"+msgRecut.toString());
 				sleep(aleaWait.next());
 			}
 			catch (Exception e) {

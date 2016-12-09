@@ -37,11 +37,17 @@ public class TestProdCons extends Simulateur {
 		
 		//le corps du programme principal
 		String pathXML;
-		pathXML = System.getProperty("user.dir").concat("/src/jus/proc/prodcons/v1/option.xml");
+		pathXML = System.getProperty("user.dir").concat("/src/jus/poc/prodcons/v1/option.xml");
 		init(pathXML);
 		System.out.println(nbCons);
 		
 		tampon = new ProdCons(nbBuffer);
+		System.out.println("tampon créé");
+		
+		creerConsommateur();
+		creerProducteurs();
+		System.out.println("prod créé");
+		
 		
 		
 	}
@@ -75,7 +81,17 @@ public class TestProdCons extends Simulateur {
 		Aleatoire aleaNbMsgToProd = new Aleatoire(nbMoyenDeProduction, deviationNbMoyenDeProduction);
 		for (int i = 0; i < nbProd; i++) {
 			Producteur prod = new Producteur (1, observateur, tempsMoyenProduction, deviationTempsMoyenProduction, aleaNbMsgToProd.next(), tampon);
-			prod.run();
+			prod.start();
+		}
+	}
+	
+	private void creerConsommateur () throws ControlException {
+		System.out.println("boucle for création cons nbCons = "+nbCons);
+		for (int i = 0; i < nbCons; i++) {
+			System.out.println("avant création cons");
+			Consommateur cons = new Consommateur(0, observateur, tempsMoyenConsommation, deviationTempsMoyenConsommation, tampon);
+			cons.start();
+			
 		}
 	}
 	
