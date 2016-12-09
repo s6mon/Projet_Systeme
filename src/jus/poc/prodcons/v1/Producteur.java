@@ -1,11 +1,12 @@
 package src.jus.poc.prodcons.v1;
 
 import jus.poc.prodcons.Acteur;
+
 import jus.poc.prodcons.ControlException;
 import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons.v1.ProdCons;
-import jus.poc.prodcons.v1.TestProdCons.TypeActeur;
+import jus.poc.prodcons.v1.TestProdCons;
 import jus.poc.prodcons.Aleatoire;
 import jus.poc.prodcons.Tampon;
 
@@ -58,7 +59,7 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 		for(i=nbMsgToSend; i > 0; i--){
 			
 			//cr�er le msg � envoyer : type, id, n�Msg
-			MessageX msgCurrent = new MessageX(TypeActeur.PRODUCTEUR, identification(), i);
+			MessageX msgCurrent = new MessageX("PRODUCTEUR", identification(), i);
 			
 			try {
 				tampon.put(this, (Message)(msgCurrent));

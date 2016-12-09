@@ -1,15 +1,15 @@
 package jus.poc.prodcons.v1;
 
 import jus.poc.prodcons.Message;
-import jus.poc.prodcons.v1.TestProdCons.TypeActeur;
+import jus.poc.prodcons.v1.TestProdCons;
 
 public class MessageX implements Message {
 	
-	TypeActeur type;
+	String type;
 	int id; 
 	int noMsg;
 
-	public MessageX (TypeActeur type, int id, int noMsg){
+	public MessageX (String type, int id, int noMsg){
 		this.type = type;
 		this.id = id;
 		this.noMsg = noMsg;
