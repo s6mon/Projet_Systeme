@@ -5,17 +5,17 @@ import jus.poc.prodcons.v1.TestProdCons;
 
 public class MessageX implements Message {
 	
-	String type;
-	int id; 
+	int idActeur; 
 	int noMsg;
+	boolean estDernier;
 
-	public MessageX (String type, int id, int noMsg){
-		this.type = type;
-		this.id = id;
+	public MessageX (int idActeur, int noMsg, boolean lastMsg){
+		this.idActeur = idActeur;
 		this.noMsg = noMsg;
-	}
+		estDernier = lastMsg;
+		}
 	
 	public String toString (){
-		return "Type acteur : "+type+" | Id : "+id+" | Num message : "+noMsg;
+		return "Acteur(producteur) n° : "+idActeur+" | Num message : "+noMsg+" | Est le dernier : "+estDernier;
 	}
 }

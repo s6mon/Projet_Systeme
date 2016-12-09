@@ -25,8 +25,7 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 		return nbMessage;
 	}
 
-	//m�thode sync
-	public synchronized Message get(_Consommateur arg0) throws Exception, InterruptedException {
+	public synchronized Message get(_Consommateur cons) throws Exception, InterruptedException {
 		MessageX msg;
 		while(nbMessage == 0){
 			wait();
@@ -38,7 +37,7 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 		return (MessageX)(msg);
 	}
 
-	public synchronized void put(_Producteur cons, Message msg) throws Exception, InterruptedException {
+	public synchronized void put(_Producteur prod, Message msg) throws Exception, InterruptedException {
 		while(nbMessage == taille()){
 			wait();
 		}

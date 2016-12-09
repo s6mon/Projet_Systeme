@@ -38,24 +38,24 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 		return nbMessage;
 	}
 
+	
+	
 	public void run() {
-		int i;
-		Aleatoire alea = new Aleatoire(moyenneTempsDeTraitement, deviationTempsDeTraitement);
+		int i = 0;
+		Aleatoire aleaWait = new Aleatoire(moyenneTempsDeTraitement, deviationTempsDeTraitement);
+		boolean lastMsg = false;
 		
 		//envoyer les nbMsgToSend
-		for(i=nbMsgToSend; i > 0; i--){
-			
-			//créer le msg à envoyer : type, id, nbMsg
-			MessageX msgCurrent = new MessageX("PRODUCTEUR", identification(), i);
+		while(i < nombreDeMessages()){
 			
 			try {
+				MessageX msgCurrent = new MessageX(identification(), i, lastMsg);
 				tampon.put(this, (Message)(msgCurrent));
-				sleep(alea.next());
+				sleep(aleaWait.next());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
-			
+			i++;
 		}
 		
 		
