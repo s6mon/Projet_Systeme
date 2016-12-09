@@ -12,7 +12,7 @@ import jus.poc.prodcons.Simulateur;
 
 public class TestProdCons extends Simulateur {
 	
-	//TODO déclarer toute les variables de XML
+	//TODO dï¿½clarer toute les variables de XML
 	
 	static int nbProd;
 	static int nbCons;
@@ -39,7 +39,7 @@ public class TestProdCons extends Simulateur {
 		pathXML = System.getProperty("user.dir").concat("/src/jus/proc/prodcons/v1/option.xml");
 		init(pathXML);
 		System.out.println(nbCons);
-		//infos XML récupérées créé tampon
+		//infos XML rï¿½cupï¿½rï¿½es crï¿½ï¿½ tampon
 		tampon = new ProdCons(nbBuffer);
 		
 		
@@ -70,20 +70,17 @@ public class TestProdCons extends Simulateur {
 
 
 	
-	//TODO créer consommateur
+	//TODO crï¿½er consommateur
 	/*private void creerConsommateurs() throws ControlException {
 		for (int i = 0; i < array.length; i++) {
-			Consommateur cons = new Consommateur (/*param à passer*//*);
+			Consommateur cons = new Consommateur (/*param ï¿½ passer*//*);
 			this.observateur.newConsommateur(cons);
 			this.nbCons.add(cons);
 		}
 	}*/
 	
 	
-	public enum TypeActeur {
-		PRODUCTEUR,
-		CONSOMMATEUR;
-	}
+
 	
 	
 	
