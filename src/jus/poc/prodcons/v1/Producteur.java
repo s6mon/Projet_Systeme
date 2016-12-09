@@ -5,11 +5,11 @@ import jus.poc.prodcons.Acteur;
 import jus.poc.prodcons.ControlException;
 import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Observateur;
+import jus.poc.prodcons.Aleatoire;
+import jus.poc.prodcons.Tampon;
 import jus.poc.prodcons.v1.MessageX;
 import jus.poc.prodcons.v1.ProdCons;
 import jus.poc.prodcons.v1.TestProdCons;
-import jus.poc.prodcons.Aleatoire;
-import jus.poc.prodcons.Tampon;
 
 public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 
