@@ -21,26 +21,23 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 		this.tailleTampon = tailleTampon;
 	}
 	
-	@Override
 	public int enAttente() {
 		return nbMessage;
 	}
 
-	@Override
-	//méthode sync
-	public synchronized MessageX get(_Consommateur arg0) throws Exception, InterruptedException {
+	//mï¿½thode sync
+	public synchronized Message get(_Consommateur arg0) throws Exception, InterruptedException {
 		MessageX msg;
 		while(nbMessage == 0){
 			wait();
 		}
 		nbMessage = nbMessage - 1;
-		msg = tampon[out];
+		msg = (MessageX)(tampon[out]);
 		out = (out+1)%taille();
 		notifyAll();
-		return msg;
+		return (MessageX)(msg);
 	}
 
-	@Override
 	public synchronized void put(_Producteur cons, Message msg) throws Exception, InterruptedException {
 		while(nbMessage == taille()){
 			wait();
@@ -51,7 +48,6 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 		notifyAll();		
 	}
 
-	@Override
 	public int taille() {
 		return tailleTampon;
 	}
