@@ -6,6 +6,7 @@ import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.util.Properties;
 
+import jus.poc.prodcons.Aleatoire;
 import jus.poc.prodcons.ControlException;
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons.Simulateur;
@@ -39,7 +40,7 @@ public class TestProdCons extends Simulateur {
 		pathXML = System.getProperty("user.dir").concat("/src/jus/proc/prodcons/v1/option.xml");
 		init(pathXML);
 		System.out.println(nbCons);
-		//infos XML rï¿½cupï¿½rï¿½es crï¿½ï¿½ tampon
+		
 		tampon = new ProdCons(nbBuffer);
 		
 		
@@ -69,15 +70,14 @@ public class TestProdCons extends Simulateur {
 	}
 
 
-	
-	//TODO crï¿½er consommateur
-	/*private void creerConsommateurs() throws ControlException {
-		for (int i = 0; i < array.length; i++) {
-			Consommateur cons = new Consommateur (/*param ï¿½ passer*//*);
-			this.observateur.newConsommateur(cons);
-			this.nbCons.add(cons);
+	//créer producteur
+	private void creerProducteurs() throws ControlException {
+		Aleatoire aleaNbMsgToProd = new Aleatoire(nbMoyenDeProduction, deviationNbMoyenDeProduction);
+		for (int i = 0; i < nbProd; i++) {
+			Producteur prod = new Producteur (1, observateur, tempsMoyenProduction, deviationTempsMoyenProduction, aleaNbMsgToProd.next(), tampon);
+			prod.run();
 		}
-	}*/
+	}
 	
 	
 

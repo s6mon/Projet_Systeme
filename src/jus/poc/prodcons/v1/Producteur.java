@@ -1,10 +1,11 @@
-package src.jus.poc.prodcons.v1;
+package jus.poc.prodcons.v1;
 
 import jus.poc.prodcons.Acteur;
 
 import jus.poc.prodcons.ControlException;
 import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Observateur;
+import jus.poc.prodcons.v1.MessageX;
 import jus.poc.prodcons.v1.ProdCons;
 import jus.poc.prodcons.v1.TestProdCons;
 import jus.poc.prodcons.Aleatoire;
@@ -15,50 +16,36 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 	private int nbMsgToSend;
 	private int nbMoyenMessage;
 	private int deviationNbProduction;
-	private int identification;
+	private int type;
+	private int nbMessage;
 	private Tampon tampon;
 	
-	protected Producteur(int identification, Observateur observateur, int moyenneTempsDeTraitement, int deviationTempsDeTraitement, int nbMoyenMessage, int deviationNbProduction, Tampon tampon) 
+	protected Producteur(int type, Observateur observateur, int moyenneTempsDeTraitement,
+			int deviationTempsDeTraitement, int nbMessage, Tampon tampon) 
 			throws ControlException {
 		
-		super(identification, observateur, moyenneTempsDeTraitement, deviationTempsDeTraitement);
+		super(type, observateur, moyenneTempsDeTraitement, deviationTempsDeTraitement);
 		
 		// TODO Auto-generated constructor stub
 		this.nbMoyenMessage = nbMoyenMessage;
 		this.deviationNbProduction = deviationNbProduction;
-		this.identification = identification;
+		this.type = type;
+		this.nbMessage = nbMessage;
 		this.tampon = tampon;
 	}
 
-
-	public int deviationTempsDeTraitement() {
-		return 0;
-
-	}
-
-	public int identification() {
-		return identification;
-	}
-
-	public int moyenneTempsDeTraitement() {
-		return 0;
-	}
-
 	public int nombreDeMessages() {
-		return Aleatoire.valeur(nbMoyenMessage, deviationNbProduction);
+		return nbMessage;
 	}
 
 	public void run() {
 		int i;
 		Aleatoire alea = new Aleatoire(moyenneTempsDeTraitement, deviationTempsDeTraitement);
-		// TODO
-		//on doit initialiser toutes nos constantes nb msg ï¿½
-		nbMsgToSend = nombreDeMessages();
 		
 		//envoyer les nbMsgToSend
 		for(i=nbMsgToSend; i > 0; i--){
 			
-			//crï¿½er le msg ï¿½ envoyer : type, id, nï¿½Msg
+			//créer le msg à envoyer : type, id, nbMsg
 			MessageX msgCurrent = new MessageX("PRODUCTEUR", identification(), i);
 			
 			try {
