@@ -29,28 +29,24 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 		this.tampon = tampon;
 	}
 
-	@Override
+
 	public int deviationTempsDeTraitement() {
 		return 0;
 
 	}
 
-	@Override
 	public int identification() {
 		return identification;
 	}
 
-	@Override
 	public int moyenneTempsDeTraitement() {
 		return 0;
 	}
 
-	@Override
 	public int nombreDeMessages() {
 		return Aleatoire.valeur(nbMoyenMessage, deviationNbProduction);
 	}
 
-	@Override
 	public void run() {
 		int i;
 		Aleatoire alea = new Aleatoire(moyenneTempsDeTraitement, deviationTempsDeTraitement);
