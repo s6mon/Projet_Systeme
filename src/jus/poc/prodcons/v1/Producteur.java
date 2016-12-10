@@ -44,23 +44,22 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 		int i = 0;
 		Aleatoire aleaWait = new Aleatoire(moyenneTempsDeTraitement, deviationTempsDeTraitement);
 		boolean lastMsg = false;
-		System.out.println("on doit créé "+nombreDeMessages()+"msg");
+		int wait;
 		
 		//envoyer les nbMsgToSend
-		while(i < nombreDeMessages()){
+		while(i <= nombreDeMessages()){
 			
 			try {
-				MessageX msgCurrent = new MessageX(identification(), i, lastMsg);
-				System.out.println("msg créé dans prod");
-				System.out.println(msgCurrent.toString());
+				MessageX msgCurrent = new MessageX(identification(), i, nombreDeMessages(), lastMsg);
 				tampon.put(this, (Message)(msgCurrent));
-				sleep(aleaWait.next());
+				wait = aleaWait.next();
+				System.out.println(wait);
+				sleep(wait);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			i++;
 		}
-		System.out.println("on sort du while");
 		
 		
 		

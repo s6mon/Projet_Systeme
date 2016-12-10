@@ -7,15 +7,18 @@ public class MessageX implements Message {
 	
 	int idActeur; 
 	int noMsg;
+	int nbTotMsg;
 	boolean estDernier;
+	
 
-	public MessageX (int idActeur, int noMsg, boolean lastMsg){
+	public MessageX (int idActeur, int noMsg, int nbTotMsg, boolean lastMsg){
 		this.idActeur = idActeur;
 		this.noMsg = noMsg;
+		this.nbTotMsg = nbTotMsg;
 		estDernier = lastMsg;
 		}
 	
 	public String toString (){
-		return "Acteur(producteur) n° : "+idActeur+" | Num message : "+noMsg+" | Est le dernier : "+estDernier;
+		return "Producteur n° : "+idActeur+" | Num message : "+noMsg+"/"+nbTotMsg+" | Est le dernier ? : "+estDernier;
 	}
 }
