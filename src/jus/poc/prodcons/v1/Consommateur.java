@@ -11,6 +11,9 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 	private int type;
 	private int moyenneTempsDeTraitement;
 	private int deviationTempsDeTraitement;
+	private int nbMsg = 0;
+	private boolean writing;
+	boolean fin = false;
 	
 	Tampon tampon;
 
@@ -29,30 +32,50 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 
 
 	public int nombreDeMessages() {
-		// TODO Auto-generated method stub
-		return 0;
+		return nbMsg;
 	}
 
 	public void run() {
-		boolean fin = false;
 		MessageX msgRecut;
 		Aleatoire aleaWait = new Aleatoire(moyenneTempsDeTraitement, deviationTempsDeTraitement);
 		int wait;
 		
-		while(!fin){
+		
+		
+		while(true){
 			
 			try {
 				msgRecut = (MessageX) tampon.get(this);
-				System.out.println("Consommateur : "+identification()+" lit "+msgRecut.toString());
+				writing = true;
+				nbMsg++;
+				//System.out.println("Consommateur : "+identification()+" lit le "+nombreDeMessages()+"-ième message "+msgRecut.toString());
+				writing = false;
 				wait  = aleaWait.next();
 				sleep(wait);
 			}
-			catch (Exception e) {
-				// TODO Auto-generated catch block
+			catch (InterruptedException e) {
+				this.interrupt();
+				break;
+			}
+			catch (Exception e){
 				e.printStackTrace();
-			} 
+			}
+			if(fin){
+				System.out.println("on est dans if fin");
+				this.interrupt();
+			}
 		}
 		
+	}
+	
+	public void changeFin(){
+		fin = true;
+	}
+	
+	public void arret() {
+		/*while(writing){}
+			this.interrupt();*/
+			System.out.println("consommateur : "+identification()+"est arrêté");
 	}
 	
 }

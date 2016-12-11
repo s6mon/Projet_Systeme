@@ -1,5 +1,10 @@
 package jus.poc.prodcons.v1;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import javax.swing.event.EventListenerList;
+
 import jus.poc.prodcons.Acteur;
 
 import jus.poc.prodcons.ControlException;
@@ -19,9 +24,14 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 	private int type;
 	private int nbMessage;
 	private Tampon tampon;
+	private int nbProdFini;
+	TestProdCons test;
+	private boolean etatProd;
+	
+	private final EventListenerList listeners = new EventListenerList();
 	
 	protected Producteur(int type, Observateur observateur, int moyenneTempsDeTraitement,
-			int deviationTempsDeTraitement, int nbMessage, Tampon tampon) 
+			int deviationTempsDeTraitement, int nbMessage, Tampon tampon, TestProdCons test) 
 			throws ControlException {
 		
 		super(Acteur.typeProducteur, observateur, moyenneTempsDeTraitement, deviationTempsDeTraitement);
@@ -32,6 +42,8 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 		this.type = type;
 		this.nbMessage = nbMessage;
 		this.tampon = tampon;
+		this.test = test;
+		etatProd = false;
 	}
 
 	public int nombreDeMessages() {
@@ -39,31 +51,49 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 	}
 
 	
+	public void addEtatProdListener(EtatProdListener listener){
+		listeners.add(EtatProdListener.class, listener);
+	}
+	
+	public EtatProdListener [] getEtatProdListeners(){
+		return listeners.getListeners(EtatProdListener.class);
+	}
+	
+	protected void fireEtatProdChanged(boolean oldValue, boolean newValue){
+		if(oldValue != newValue){
+			for(EtatProdListener listener : getEtatProdListeners()){
+			listener.etatProdChangee(oldValue, newValue);
+			}
+		}
+	}
 	
 	public void run() {
 		int i = 0;
 		Aleatoire aleaWait = new Aleatoire(moyenneTempsDeTraitement, deviationTempsDeTraitement);
 		boolean lastMsg = false;
 		int wait;
+		int slow = 1;
 		
 		//envoyer les nbMsgToSend
 		while(i <= nombreDeMessages()){
-			
+			if(i == nombreDeMessages()){
+				lastMsg = true;
+			}
 			try {
 				MessageX msgCurrent = new MessageX(identification(), i, nombreDeMessages(), lastMsg);
-				tampon.put(this, (Message)(msgCurrent));
-				wait = aleaWait.next();
-				System.out.println(wait);
+				wait = aleaWait.next() * slow;
 				sleep(wait);
+				tampon.put(this, (Message)(msgCurrent));
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			i++;
 		}
+		//test.setterEtatProds(); //cette solution est bof
 		
-		
-		
-		
+		fireEtatProdChanged(false, true);
+		this.interrupt();
 		//this.moniteur.put(this, new Message("message")); moniteur correspond � tampon
 	}
 

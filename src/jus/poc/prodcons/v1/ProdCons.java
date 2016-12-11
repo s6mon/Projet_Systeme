@@ -30,7 +30,7 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 		while(nbMessage == 0){
 			wait();
 		}
-		nbMessage = nbMessage - 1;
+		nbMessage--;
 		msg = (MessageX)(tampon[out]);
 		out = (out+1)%taille();
 		notifyAll();
@@ -41,7 +41,7 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 		while(nbMessage == taille()){
 			wait();
 		}
-		nbMessage = nbMessage + 1;
+		nbMessage++;
 		tampon[in] = (MessageX)msg;
 		in = (in+1)%taille();
 		notifyAll();		

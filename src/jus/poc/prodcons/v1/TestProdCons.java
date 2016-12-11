@@ -29,6 +29,8 @@ public class TestProdCons extends Simulateur {
 	Consommateur [] consommateurs;
 	
 	private ProdCons tampon;
+	private static int etatProds = 0;
+	boolean tamponEmpty;
 
 	public TestProdCons (Observateur observateur){super(observateur);}
 	
@@ -45,8 +47,37 @@ public class TestProdCons extends Simulateur {
 		creerConsommateur();
 		creerProducteurs();
 		
-		
-		
+		for(int i=0; i < nbProd; i++){
+			producteurs[i].addEtatProdListener(new EtatProdListener() {	
+				public void etatProdChangee(boolean oldValue, boolean newValue) {
+					prodFinit();
+					if(etatProds == nbProd){
+						int nb = tampon.enAttente();
+						while(nb != 0){
+							System.out.println(nb);
+							nb = tampon.enAttente();
+							try {
+								Thread.sleep(100);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+						System.out.println("youyou");
+						for(int i=0; i < nbCons; i++){
+							consommateurs[i].changeFin();
+							//System.out.println("le thread "+i+"est arrêté"+consommateurs[i].isInterrupted());
+						}
+						//this.interrupt();
+					}
+				}
+			});
+		}
+	}
+	
+	public synchronized void prodFinit (){
+		etatProds++;
+		System.out.println(etatProds);
 	}
 	
 	public void init (String file){
@@ -77,13 +108,14 @@ public class TestProdCons extends Simulateur {
 	private void creerProducteurs() throws ControlException {
 		Aleatoire aleaNbMsgToProd = new Aleatoire(nbMoyenDeProduction, deviationNbMoyenDeProduction);
 		for (int i = 0; i < nbProd; i++) {
-			Producteur prod = new Producteur (1, observateur, tempsMoyenProduction, deviationTempsMoyenProduction, aleaNbMsgToProd.next(), tampon);
+			Producteur prod = new Producteur (1, observateur, tempsMoyenProduction,
+					deviationTempsMoyenProduction, aleaNbMsgToProd.next(), tampon, this);
 			prod.start();
+			producteurs[i] = prod;
 		}
 	}
 	
 	private void creerConsommateur () throws ControlException {
-		System.out.println("boucle for création cons nbCons = "+nbCons);
 		for (int i = 0; i < nbCons; i++) {
 			Consommateur cons = new Consommateur(0, observateur, tempsMoyenConsommation, deviationTempsMoyenConsommation, tampon);
 			cons.start();
@@ -92,7 +124,9 @@ public class TestProdCons extends Simulateur {
 	}
 	
 	
-
+	public void setterEtatProds (){
+		etatProds++;
+	}
 	
 	
 	

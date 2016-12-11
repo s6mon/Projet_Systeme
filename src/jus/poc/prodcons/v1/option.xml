@@ -3,13 +3,13 @@
 <comment>
 Cette configuration ...
 </comment>
-<entry key="nbProd">3</entry>
+<entry key="nbProd">5</entry>
 <entry key="nbCons">5</entry>
-<entry key="nbBuffer">1</entry>
-<entry key="tempsMoyenProduction">500</entry>
-<entry key="deviationTempsMoyenProduction">50</entry>
-<entry key="tempsMoyenConsommation">100</entry>
-<entry key="deviationTempsMoyenConsommation">10</entry>
+<entry key="nbBuffer">20</entry>
+<entry key="tempsMoyenProduction">10</entry>
+<entry key="deviationTempsMoyenProduction">1</entry>
+<entry key="tempsMoyenConsommation">500</entry>
+<entry key="deviationTempsMoyenConsommation">100</entry>
 <entry key="nombreMoyenDeProduction">5</entry>
 <entry key="deviationNombreMoyenDeProduction">1</entry>
 <entry key="nombreMoyenNbExemplaire">5</entry>

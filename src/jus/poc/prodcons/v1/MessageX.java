@@ -19,6 +19,6 @@ public class MessageX implements Message {
 		}
 	
 	public String toString (){
-		return "Producteur n° : "+idActeur+" | Num message : "+noMsg+"/"+nbTotMsg+" | Est le dernier ? : "+estDernier;
+		return "Producteur : "+idActeur+" | Num message : "+noMsg+"/"+nbTotMsg+" | Est le dernier ? : "+estDernier;
 	}
 }
