@@ -10,11 +10,14 @@ public class MessageX implements Message {
 	int nbTotMsg;
 	boolean estDernier;
 	
+	
+	
 
 	public MessageX (int idActeur, int noMsg, int nbTotMsg, boolean lastMsg){
 		this.idActeur = idActeur;
 		this.noMsg = noMsg;
 		this.nbTotMsg = nbTotMsg;
+		idActeur--;
 		estDernier = lastMsg;
 		}
 	
