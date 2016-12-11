@@ -17,7 +17,6 @@ public class MessageX implements Message {
 		this.idActeur = idActeur;
 		this.noMsg = noMsg;
 		this.nbTotMsg = nbTotMsg;
-		idActeur--;
 		estDernier = lastMsg;
 		}
 	
