@@ -43,7 +43,6 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 		this.nbMessage = nbMessage;
 		this.tampon = tampon;
 		this.test = test;
-		etatProd = false;
 	}
 
 	public int nombreDeMessages() {
@@ -74,13 +73,12 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 		int wait;
 		int slow = 1;
 		
-		//envoyer les nbMsgToSend
 		while(i <= nombreDeMessages()){
 			if(i == nombreDeMessages()){
 				lastMsg = true;
 			}
 			try {
-				MessageX msgCurrent = new MessageX(identification(), i, nombreDeMessages(), lastMsg);
+				MessageX msgCurrent = new MessageX(identification(), i, nombreDeMessages());
 				wait = aleaWait.next() * slow;
 				sleep(wait);
 				tampon.put(this, (Message)(msgCurrent));
@@ -89,12 +87,9 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 				e.printStackTrace();
 			}
 			i++;
-		}
-		//test.setterEtatProds(); //cette solution est bof
-		
+		}		
 		fireEtatProdChanged(false, true);
 		this.interrupt();
-		//this.moniteur.put(this, new Message("message")); moniteur correspond � tampon
 	}
 
 }

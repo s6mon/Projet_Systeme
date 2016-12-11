@@ -13,7 +13,7 @@ import jus.poc.prodcons.Simulateur;
 
 public class TestProdCons extends Simulateur {
 	
-	//TODO dï¿½clarer toute les variables de XML
+	//TODO déclarer toute les variables de XML
 	
 	static int nbProd;
 	static int nbCons;
@@ -29,15 +29,13 @@ public class TestProdCons extends Simulateur {
 	Consommateur [] consommateurs;
 	
 	private ProdCons tampon;
-	private static int etatProds = 0;
+	private static int nbProdFinit = 0;
 	boolean tamponEmpty;
 
 	public TestProdCons (Observateur observateur){super(observateur);}
 	
 	protected void run() throws Exception {
 		
-		
-		//le corps du programme principal
 		String pathXML;
 		pathXML = System.getProperty("user.dir").concat("/src/jus/poc/prodcons/v1/option.xml");
 		init(pathXML);
@@ -51,7 +49,7 @@ public class TestProdCons extends Simulateur {
 			producteurs[i].addEtatProdListener(new EtatProdListener() {	
 				public void etatProdChangee(boolean oldValue, boolean newValue) {
 					prodFinit();
-					if(etatProds == nbProd){
+					if(nbProdFinit == nbProd){
 						int nb = tampon.enAttente();
 						while(nb != 0){
 							System.out.println(nb);
@@ -59,25 +57,22 @@ public class TestProdCons extends Simulateur {
 							try {
 								Thread.sleep(100);
 							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						}
-						System.out.println("youyou");
 						for(int i=0; i < nbCons; i++){
-							consommateurs[i].changeFin();
-							//System.out.println("le thread "+i+"est arrêté"+consommateurs[i].isInterrupted());
+							consommateurs[i].arret();
 						}
-						//this.interrupt();
 					}
 				}
 			});
 		}
 	}
 	
+	
+	
 	public synchronized void prodFinit (){
-		etatProds++;
-		System.out.println(etatProds);
+		nbProdFinit++;
 	}
 	
 	public void init (String file){
@@ -119,17 +114,9 @@ public class TestProdCons extends Simulateur {
 		for (int i = 0; i < nbCons; i++) {
 			Consommateur cons = new Consommateur(0, observateur, tempsMoyenConsommation, deviationTempsMoyenConsommation, tampon);
 			cons.start();
-			
+			consommateurs[i] = cons;
 		}
-	}
-	
-	
-	public void setterEtatProds (){
-		etatProds++;
-	}
-	
-	
-	
+	}	
 	
 	public static void main(String[] args){new TestProdCons(new Observateur ()).start();}
 	
