@@ -13,7 +13,6 @@ import jus.poc.prodcons.Simulateur;
 
 public class TestProdCons extends Simulateur {
 	
-	
 	static int nbProd;
 	static int nbCons;
 	static int nbBuffer;
@@ -44,6 +43,47 @@ public class TestProdCons extends Simulateur {
 		creerConsommateur();
 		creerProducteurs();
 		
+
+		for(int i=0; i < nbProd; i++){
+			producteurs[i].addEtatProdListener(new EtatProdListener() {	
+				public void etatProdChangee(boolean oldValue, boolean newValue) {
+					prodFinit();
+					if(nbProdFinit == nbProd){
+						while(tampon.enAttente() != 0){
+							System.out.println("je suis bloquï¿½");
+							try {
+								Thread.sleep(100);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+						for(int i=0; i < nbCons; i++){
+							consommateurs[i].arret();
+						}
+					if(nbProdFinit == 0){
+						for(int i=0; i < nbProd; i++){
+							producteurs[i].arret();
+						}
+					}
+		}
+		while(true){
+			int nb = tampon.enAttente();
+			System.out.println(nb);
+			if(nb == 0 && nbProdFinit == 0){
+				System.out.println("??????????????");
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			for(int i=0; i < nbCons; i++){
+				consommateurs[i].changeEtat();
+				tampon.liberer();
+				consommateurs[i].arret();
+				System.out.println(consommateurs[i].isAlive());
+			}
+		}
 		
 		while(nbProdFinit != 0){
 			Thread.sleep(1000);
@@ -92,7 +132,7 @@ public class TestProdCons extends Simulateur {
 	}
 
 
-	//créer producteur
+	//crï¿½er producteur
 	private void creerProducteurs() throws ControlException {
 		Aleatoire aleaNbMsgToProd = new Aleatoire(nbMoyenDeProduction, deviationNbMoyenDeProduction);
 		for (int i = 0; i < nbProd; i++) {
