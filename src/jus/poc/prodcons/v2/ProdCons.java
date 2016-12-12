@@ -1,7 +1,6 @@
 package jus.poc.prodcons.v2;
 
 import jus.poc.prodcons.Message;
-import jus.poc.prodcons.Tampon;
 import jus.poc.prodcons._Consommateur;
 import jus.poc.prodcons._Producteur;
 
@@ -12,7 +11,7 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 	private int out;
 	MessageX [] tampon;
 	private int tailleTampon;
-	private MySemaphore mutexIn, mutexOut, semProd, semCons;
+	private MySemaphore mutex, semProd, semCons;
 	
 	public ProdCons (int tailleTampon){
 		in = 0;
@@ -20,8 +19,7 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 		tampon = new MessageX [tailleTampon];
 		nbMessage = 0;
 		this.tailleTampon = tailleTampon;
-		mutexIn = new MySemaphore(1);
-		mutexOut = new MySemaphore(1);
+		mutex = new MySemaphore(1);
 		semProd = new MySemaphore(tailleTampon);
 		semCons = new MySemaphore(0);
 	}
@@ -32,7 +30,7 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 
 	public Message get(_Consommateur cons) throws Exception, InterruptedException {
 		semCons.p();
-		mutexOut.p();
+		mutex.p();
 		
 		System.out.println("cons "+cons.identification()+" a pris le mutex");
 		MessageX msg;
@@ -41,14 +39,14 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 		out = (out+1)%taille();
 		
 		System.out.println("cons "+cons.identification()+" va rendre le mutex");
-		mutexOut.v();
+		mutex.v();
 		semProd.v();
 		return (MessageX)(msg);
 	}
 
 	public void put(_Producteur prod, Message msg) throws Exception, InterruptedException {
 		semProd.p();
-		mutexOut.p();
+		mutex.p();
 		
 		System.out.println("prod "+prod.identification()+" a pris le mutex");
 		nbMessage++;
@@ -56,12 +54,16 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 		in = (in+1)%taille();
 		
 		System.out.println("prod "+prod.identification()+" va rendre le mutex");
-		mutexOut.v();
+		mutex.v();
 		semCons.v();		
 	}
 
 	public int taille() {
 		return tailleTampon;
+	}
+	
+	public void liberer(){
+		semCons.v();
 	}
 
 }

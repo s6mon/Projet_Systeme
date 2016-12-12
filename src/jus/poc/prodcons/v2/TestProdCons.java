@@ -29,7 +29,7 @@ public class TestProdCons extends Simulateur {
 	Consommateur [] consommateurs;
 	
 	private ProdCons tampon;
-	private static int nbProdFinit = 0;
+	private static int nbProdFinit;
 	boolean tamponEmpty;
 
 	public TestProdCons (Observateur observateur){super(observateur);}
@@ -49,28 +49,37 @@ public class TestProdCons extends Simulateur {
 			producteurs[i].addEtatProdListener(new EtatProdListener() {	
 				public void etatProdChangee(boolean oldValue, boolean newValue) {
 					prodFinit();
-					if(nbProdFinit == nbProd){
-						while(tampon.enAttente() != 0){
-							System.out.println("je suis bloqué");
-							try {
-								Thread.sleep(100);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-						}
-						for(int i=0; i < nbCons; i++){
-							consommateurs[i].arret();
+					if(nbProdFinit == 0){
+						for(int i=0; i < nbProd; i++){
+							producteurs[i].arret();
 						}
 					}
-				}
+				}	
 			});
 		}
+		while(true){
+			int nb = tampon.enAttente();
+			System.out.println(nb);
+			if(nb == 0 && nbProdFinit == 0){
+				System.out.println("??????????????");
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			for(int i=0; i < nbCons; i++){
+				consommateurs[i].changeEtat();
+				tampon.liberer();
+				consommateurs[i].arret();
+				System.out.println(consommateurs[i].isAlive());
+			}
+		}
+		
 	}
 	
-	
-	
 	public synchronized void prodFinit (){
-		nbProdFinit++;
+		nbProdFinit--;
 		System.out.println("il y a "+nbProdFinit+"nb prod finit");
 	}
 	
@@ -91,6 +100,8 @@ public class TestProdCons extends Simulateur {
 			
 			producteurs = new Producteur[nbProd];
 			consommateurs = new Consommateur[nbCons];
+			
+			nbProdFinit = nbProd;
 			
 		} catch (IOException e){
 			e.printStackTrace();

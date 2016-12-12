@@ -3,15 +3,14 @@ package jus.poc.prodcons.v2;
 public class MySemaphore {
 
 	private int count;
-	private int attente;
 	
-	public MySemaphore(int taille){
-		count = taille;
-		attente = 0;
+	public MySemaphore(int count){
+		this.count = count;
 	}
 	
 	public synchronized void p (){
-		if(--count < 0){
+		count--;
+		if(count < 0){
 			
 			try {
 				wait();
@@ -23,6 +22,8 @@ public class MySemaphore {
 	
 	public synchronized void v (){
 		count++;
-		notify();
+		if(count <= 0){
+			notify();
+		}
 	}
 }

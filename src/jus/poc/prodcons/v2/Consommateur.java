@@ -11,8 +11,10 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 	private int type;
 	private int moyenneTempsDeTraitement;
 	private int deviationTempsDeTraitement;
-	private int nbMsg = 0;
+	private int nbMsg;
 	private boolean reading;
+	private boolean work;
+	
 	
 	Tampon tampon;
 
@@ -27,6 +29,8 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 		this.moyenneTempsDeTraitement = moyenneTempsDeTraitement;
 		this.deviationTempsDeTraitement = deviationTempsDeTraitement;
 		this.tampon = tampon;
+		nbMsg = 0;
+		work = true;
 	}
 
 
@@ -41,22 +45,21 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 		
 		
 		
-		while(true){
+		while(work){
 			
 			try {
+				reading = true;
 				msgRecut = (MessageX) tampon.get(this);
 				nbMsg++;
-				reading = true;
-				System.out.println("Consommateur : "+identification()+" lit son "+nombreDeMessages()+"-ième message, "+msgRecut.toString());
 				wait  = aleaWait.next();
 				sleep(wait);
+				System.out.println("Consommateur : "+identification()+" lit son "+nombreDeMessages()+"-ième message, "+msgRecut.toString());
 				reading = false;
-
 			}
-			/*catch (InterruptedException e) {
+			catch (InterruptedException e) {
 				this.interrupt();
 				break;
-			}*/
+			}
 			catch (Exception e){
 				e.printStackTrace();
 			}
@@ -65,9 +68,15 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 	}
 	
 	public void arret() {
-		while(reading);
+		while(reading){
+		}
 		System.out.println("cons"+identification()+" est fermé");
 		this.interrupt();
+	}
+	
+	public synchronized void changeEtat(){
+		work = false;
+		
 	}
 	
 }
