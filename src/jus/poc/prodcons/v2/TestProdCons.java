@@ -13,7 +13,6 @@ import jus.poc.prodcons.Simulateur;
 
 public class TestProdCons extends Simulateur {
 	
-	//TODO déclarer toute les variables de XML
 	
 	static int nbProd;
 	static int nbCons;
@@ -45,42 +44,26 @@ public class TestProdCons extends Simulateur {
 		creerConsommateur();
 		creerProducteurs();
 		
-		for(int i=0; i < nbProd; i++){
-			producteurs[i].addEtatProdListener(new EtatProdListener() {	
-				public void etatProdChangee(boolean oldValue, boolean newValue) {
-					prodFinit();
-					if(nbProdFinit == 0){
-						for(int i=0; i < nbProd; i++){
-							producteurs[i].arret();
-						}
-					}
-				}	
-			});
-		}
-		while(true){
-			int nb = tampon.enAttente();
-			System.out.println(nb);
-			if(nb == 0 && nbProdFinit == 0){
-				System.out.println("??????????????");
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			for(int i=0; i < nbCons; i++){
-				consommateurs[i].changeEtat();
-				tampon.liberer();
-				consommateurs[i].arret();
-				System.out.println(consommateurs[i].isAlive());
-			}
-		}
 		
+		while(nbProdFinit != 0){
+			Thread.sleep(1000);
+		}
+		while(tampon.enAttente() != 0){}
+		for(int i=0; i<nbProd; i++){
+			producteurs[i].arret();
+		}
+		for(int i=tampon.enAttente(); i!=0; i++){
+			tampon.liberer();
+		}
+		for(int i=0; i<nbCons; i++){
+			consommateurs[i].changeWork();
+			tampon.liberer();
+			consommateurs[i].arret();
+		}
 	}
 	
 	public synchronized void prodFinit (){
 		nbProdFinit--;
-		System.out.println("il y a "+nbProdFinit+"nb prod finit");
 	}
 	
 	public void init (String file){
@@ -114,7 +97,7 @@ public class TestProdCons extends Simulateur {
 		Aleatoire aleaNbMsgToProd = new Aleatoire(nbMoyenDeProduction, deviationNbMoyenDeProduction);
 		for (int i = 0; i < nbProd; i++) {
 			producteurs[i] = new Producteur (1, observateur, tempsMoyenProduction,
-					deviationTempsMoyenProduction, aleaNbMsgToProd.next(), tampon);
+					deviationTempsMoyenProduction, aleaNbMsgToProd.next(), tampon, this);
 			producteurs[i].start();
 		}
 	}

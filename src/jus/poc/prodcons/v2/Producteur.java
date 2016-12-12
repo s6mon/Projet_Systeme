@@ -20,12 +20,13 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 	private int nbMessage;
 	private Tampon tampon;
 	private boolean writing;
+	private TestProdCons test;
 
 	
 	private final EventListenerList listeners = new EventListenerList();
 	
 	protected Producteur(int type, Observateur observateur, int moyenneTempsDeTraitement,
-			int deviationTempsDeTraitement, int nbMessage, Tampon tampon) 
+			int deviationTempsDeTraitement, int nbMessage, Tampon tampon, TestProdCons test) 
 			throws ControlException {
 		
 		super(Acteur.typeProducteur, observateur, moyenneTempsDeTraitement, deviationTempsDeTraitement);
@@ -36,27 +37,11 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 		this.type = type;
 		this.nbMessage = nbMessage;
 		this.tampon = tampon;
+		this.test = test;
 	}
 
 	public int nombreDeMessages() {
 		return nbMessage;
-	}
-
-	
-	public void addEtatProdListener(EtatProdListener listener){
-		listeners.add(EtatProdListener.class, listener);
-	}
-	
-	public EtatProdListener [] getEtatProdListeners(){
-		return listeners.getListeners(EtatProdListener.class);
-	}
-	
-	protected void fireEtatProdChanged(boolean oldValue, boolean newValue){
-		if(oldValue != newValue){
-			for(EtatProdListener listener : getEtatProdListeners()){
-			listener.etatProdChangee(oldValue, newValue);
-			}
-		}
 	}
 	
 	public void run() {
@@ -78,20 +63,12 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 				e.printStackTrace();
 			}
 			i++;
-			System.out.println("je suis dans prod "+identification());
 		}
-		System.out.println("prod "+identification()+"va se fermer, il est "+this.isAlive());
-		//System.out.println();
-		fireEtatProdChanged(false, true);
-		//arret();
+		test.prodFinit();
 	}
 	
 	public void arret(){
-		System.out.println(writing);
-		while(writing){
-			System.out.println("wawawawa");
-		}
-		System.out.println("prod"+identification()+" est fermé");
+		while(writing){}
 		this.interrupt();
 	}
 }
