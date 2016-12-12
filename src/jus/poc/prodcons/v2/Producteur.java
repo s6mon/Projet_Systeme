@@ -60,7 +60,7 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 	}
 	
 	public void run() {
-		int i = 0;
+		int i = 1;
 		Aleatoire aleaWait = new Aleatoire(moyenneTempsDeTraitement, deviationTempsDeTraitement);
 		int wait;
 		
@@ -83,12 +83,14 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 		System.out.println("prod "+identification()+"va se fermer, il est "+this.isAlive());
 		//System.out.println();
 		fireEtatProdChanged(false, true);
-		arret();
+		//arret();
 	}
 	
 	public void arret(){
 		System.out.println(writing);
-		while(writing);
+		while(writing){
+			System.out.println("wawawawa");
+		}
 		System.out.println("prod"+identification()+" est fermé");
 		this.interrupt();
 	}
