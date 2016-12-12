@@ -34,11 +34,13 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 		semCons.p();
 		mutexOut.p();
 		
+		System.out.println("cons "+cons.identification()+" a pris le mutex");
 		MessageX msg;
 		nbMessage--;
 		msg = (MessageX)(tampon[out]);
 		out = (out+1)%taille();
 		
+		System.out.println("cons "+cons.identification()+" va rendre le mutex");
 		mutexOut.v();
 		semProd.v();
 		return (MessageX)(msg);
@@ -46,13 +48,15 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 
 	public void put(_Producteur prod, Message msg) throws Exception, InterruptedException {
 		semProd.p();
-		mutexIn.p();
+		mutexOut.p();
 		
+		System.out.println("prod "+prod.identification()+" a pris le mutex");
 		nbMessage++;
 		tampon[in] = (MessageX)msg;
 		in = (in+1)%taille();
 		
-		mutexIn.v();
+		System.out.println("prod "+prod.identification()+" va rendre le mutex");
+		mutexOut.v();
 		semCons.v();		
 	}
 

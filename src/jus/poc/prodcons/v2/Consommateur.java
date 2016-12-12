@@ -12,7 +12,7 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 	private int moyenneTempsDeTraitement;
 	private int deviationTempsDeTraitement;
 	private int nbMsg = 0;
-	private boolean writing;
+	private boolean reading;
 	
 	Tampon tampon;
 
@@ -45,17 +45,18 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 			
 			try {
 				msgRecut = (MessageX) tampon.get(this);
-				writing = true;
 				nbMsg++;
+				reading = true;
 				System.out.println("Consommateur : "+identification()+" lit son "+nombreDeMessages()+"-ième message, "+msgRecut.toString());
-				writing = false;
 				wait  = aleaWait.next();
 				sleep(wait);
+				reading = false;
+
 			}
-			catch (InterruptedException e) {
+			/*catch (InterruptedException e) {
 				this.interrupt();
 				break;
-			}
+			}*/
 			catch (Exception e){
 				e.printStackTrace();
 			}
@@ -64,8 +65,9 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 	}
 	
 	public void arret() {
-		while(writing);
-			this.interrupt();
+		while(reading);
+		System.out.println("cons"+identification()+" est fermé");
+		this.interrupt();
 	}
 	
 }

@@ -50,9 +50,8 @@ public class TestProdCons extends Simulateur {
 				public void etatProdChangee(boolean oldValue, boolean newValue) {
 					prodFinit();
 					if(nbProdFinit == nbProd){
-						int nb = tampon.enAttente();
-						while(nb != 0){
-							System.out.println(nb);
+						while(tampon.enAttente() != 0){
+							System.out.println("je suis bloqué");
 							try {
 								Thread.sleep(100);
 							} catch (InterruptedException e) {
@@ -72,6 +71,7 @@ public class TestProdCons extends Simulateur {
 	
 	public synchronized void prodFinit (){
 		nbProdFinit++;
+		System.out.println("il y a "+nbProdFinit+"nb prod finit");
 	}
 	
 	public void init (String file){
@@ -102,18 +102,16 @@ public class TestProdCons extends Simulateur {
 	private void creerProducteurs() throws ControlException {
 		Aleatoire aleaNbMsgToProd = new Aleatoire(nbMoyenDeProduction, deviationNbMoyenDeProduction);
 		for (int i = 0; i < nbProd; i++) {
-			Producteur prod = new Producteur (1, observateur, tempsMoyenProduction,
+			producteurs[i] = new Producteur (1, observateur, tempsMoyenProduction,
 					deviationTempsMoyenProduction, aleaNbMsgToProd.next(), tampon);
-			prod.start();
-			producteurs[i] = prod;
+			producteurs[i].start();
 		}
 	}
 	
 	private void creerConsommateur () throws ControlException {
 		for (int i = 0; i < nbCons; i++) {
-			Consommateur cons = new Consommateur(0, observateur, tempsMoyenConsommation, deviationTempsMoyenConsommation, tampon);
-			cons.start();
-			consommateurs[i] = cons;
+			consommateurs[i] = new Consommateur(0, observateur, tempsMoyenConsommation, deviationTempsMoyenConsommation, tampon);
+			consommateurs[i].start();
 		}
 	}	
 	

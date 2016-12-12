@@ -2,15 +2,17 @@ package jus.poc.prodcons.v2;
 
 public class MySemaphore {
 
-	int count;
+	private int count;
+	private int attente;
 	
 	public MySemaphore(int taille){
 		count = taille;
+		attente = 0;
 	}
 	
 	public synchronized void p (){
-		//count--;
 		if(--count < 0){
+			
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -20,9 +22,7 @@ public class MySemaphore {
 	}
 	
 	public synchronized void v (){
-		//count++;
-		if(++count <= 0){
-			notify();
-		}
+		count++;
+		notify();
 	}
 }

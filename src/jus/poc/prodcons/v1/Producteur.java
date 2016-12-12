@@ -62,7 +62,7 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 		Aleatoire aleaWait = new Aleatoire(moyenneTempsDeTraitement, deviationTempsDeTraitement);
 		int wait;
 		
-		while(i <= nombreDeMessages()){
+		while(i < nombreDeMessages()){
 
 			try {
 				MessageX msgCurrent = new MessageX(identification(), i, nombreDeMessages());

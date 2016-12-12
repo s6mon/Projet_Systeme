@@ -19,6 +19,7 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 	private int type;
 	private int nbMessage;
 	private Tampon tampon;
+	private boolean writing;
 
 	
 	private final EventListenerList listeners = new EventListenerList();
@@ -67,17 +68,28 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 			
 			try {
 				MessageX msgCurrent = new MessageX(identification(), i, nombreDeMessages());
+				writing = true;
 				wait = aleaWait.next();
 				sleep(wait);
 				tampon.put(this, (Message)(msgCurrent));
+				writing = false;
 				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			i++;
-		}		
+			System.out.println("je suis dans prod "+identification());
+		}
+		System.out.println("prod "+identification()+"va se fermer, il est "+this.isAlive());
+		//System.out.println();
 		fireEtatProdChanged(false, true);
+		arret();
+	}
+	
+	public void arret(){
+		System.out.println(writing);
+		while(writing);
+		System.out.println("prod"+identification()+" est fermé");
 		this.interrupt();
 	}
-
 }
