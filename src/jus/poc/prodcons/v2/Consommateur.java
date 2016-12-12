@@ -24,7 +24,6 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 		throws ControlException {
 		super(Acteur.typeConsommateur, observateur, moyenneTempsDeTraitement, deviationTempsDeTraitement);
 		
-		// TODO Auto-generated constructor stub
 		this.type = type;
 		this.moyenneTempsDeTraitement = moyenneTempsDeTraitement;
 		this.deviationTempsDeTraitement = deviationTempsDeTraitement;
@@ -43,21 +42,13 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 		Aleatoire aleaWait = new Aleatoire(moyenneTempsDeTraitement, deviationTempsDeTraitement);
 		int wait;
 		
-		
-		
 		while(work){
 			
 			try {
-				reading = true;
 				msgRecut = (MessageX) tampon.get(this);
-				if(msgRecut != null){
-					System.out.println("Consommateur : "+identification()+" lit son "+nombreDeMessages()+"-ième message, "+msgRecut.toString());
-					nbMsg++;
-				}
+				nbMsg++;
 				wait  = aleaWait.next();
 				sleep(wait);
-				
-				reading = false;
 			}
 			catch (InterruptedException e) {
 				this.interrupt();
@@ -73,8 +64,7 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 	public void arret() {
 		this.interrupt();
 	}
-	
-	public void changeWork(){
+	public void changeState(){
 		work = false;
 	}
 	

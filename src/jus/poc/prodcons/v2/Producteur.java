@@ -23,15 +23,12 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 	private TestProdCons test;
 
 	
-	private final EventListenerList listeners = new EventListenerList();
-	
 	protected Producteur(int type, Observateur observateur, int moyenneTempsDeTraitement,
 			int deviationTempsDeTraitement, int nbMessage, Tampon tampon, TestProdCons test) 
 			throws ControlException {
 		
 		super(Acteur.typeProducteur, observateur, moyenneTempsDeTraitement, deviationTempsDeTraitement);
 		
-		// TODO Auto-generated constructor stub
 		this.nbMoyenMessage = nbMoyenMessage;
 		this.deviationNbProduction = deviationNbProduction;
 		this.type = type;
@@ -65,10 +62,5 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 			i++;
 		}
 		test.prodFinit();
-	}
-	
-	public void arret(){
-		while(writing){}
-		this.interrupt();
 	}
 }

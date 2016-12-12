@@ -25,28 +25,29 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 	}
 	
 	public int enAttente() {
-		return nbMessage;
+		return ((in - out)+taille())%taille();
 	}
 
 	public Message get(_Consommateur cons) throws Exception, InterruptedException {
 		semCons.p();
 		mutex.p();
 		
-		MessageX msg;
-		nbMessage--;
-		msg = (MessageX)(tampon[out]);
+		MessageX msg = tampon[out];
+		tampon[out] = null;
+		if(msg != null){
+			System.out.println("Consommateur : "+cons.identification()+" lit son "+cons.nombreDeMessages()+"-ième message, "+msg.toString());
+		}
 		out = (out+1)%taille();
 		
 		mutex.v();
 		semProd.v();
-		return (MessageX)(msg);
+		return msg;
 	}
 
 	public void put(_Producteur prod, Message msg) throws Exception, InterruptedException {
 		semProd.p();
 		mutex.p();
 		
-		nbMessage++;
 		tampon[in] = (MessageX)msg;
 		in = (in+1)%taille();
 		

@@ -2,6 +2,7 @@ package jus.poc.prodcons.v2;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.Thread.State;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.util.Properties;
@@ -28,9 +29,11 @@ public class TestProdCons extends Simulateur {
 	
 	private ProdCons tampon;
 	private static int nbProdFinit;
-	boolean tamponEmpty;
+	private Consommateur consCurrent;
+	
 
 	public TestProdCons (Observateur observateur){super(observateur);}
+	
 	
 	protected void run() throws Exception {
 		
@@ -41,64 +44,22 @@ public class TestProdCons extends Simulateur {
 		tampon = new ProdCons(nbBuffer);
 		
 		creerConsommateur();
-		creerProducteurs();
+		creerProducteur();
 		
 
-		for(int i=0; i < nbProd; i++){
-			producteurs[i].addEtatProdListener(new EtatProdListener() {	
-				public void etatProdChangee(boolean oldValue, boolean newValue) {
-					prodFinit();
-					if(nbProdFinit == nbProd){
-						while(tampon.enAttente() != 0){
-							System.out.println("je suis bloqu�");
-							try {
-								Thread.sleep(100);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-						}
-						for(int i=0; i < nbCons; i++){
-							consommateurs[i].arret();
-						}
-					if(nbProdFinit == 0){
-						for(int i=0; i < nbProd; i++){
-							producteurs[i].arret();
-						}
-					}
-		}
-		while(true){
-			int nb = tampon.enAttente();
-			System.out.println(nb);
-			if(nb == 0 && nbProdFinit == 0){
-				System.out.println("??????????????");
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			for(int i=0; i < nbCons; i++){
-				consommateurs[i].changeEtat();
-				tampon.liberer();
-				consommateurs[i].arret();
-				System.out.println(consommateurs[i].isAlive());
-			}
-		}
 		
-		while(nbProdFinit != 0){
-			Thread.sleep(1000);
+		while(nbProdFinit > 0 || tampon.enAttente() != 0){
+			Thread.sleep(100);
 		}
-		while(tampon.enAttente() != 0){}
-		for(int i=0; i<nbProd; i++){
-			producteurs[i].arret();
-		}
-		for(int i=tampon.enAttente(); i!=0; i++){
-			tampon.liberer();
-		}
+
+		System.out.println("Fermeture des cons");
 		for(int i=0; i<nbCons; i++){
-			consommateurs[i].changeWork();
-			tampon.liberer();
-			consommateurs[i].arret();
+			consCurrent = consommateurs[i];
+			consCurrent.changeState();
+			while(consCurrent.getState() == State.WAITING){
+				tampon.liberer();
+			}
+			consCurrent.arret();
 		}
 	}
 	
@@ -132,13 +93,12 @@ public class TestProdCons extends Simulateur {
 	}
 
 
-	//cr�er producteur
-	private void creerProducteurs() throws ControlException {
+		private void creerProducteur () throws ControlException {
 		Aleatoire aleaNbMsgToProd = new Aleatoire(nbMoyenDeProduction, deviationNbMoyenDeProduction);
-		for (int i = 0; i < nbProd; i++) {
-			producteurs[i] = new Producteur (1, observateur, tempsMoyenProduction,
-					deviationTempsMoyenProduction, aleaNbMsgToProd.next(), tampon, this);
-			producteurs[i].start();
+		for (int prod = 0; prod < nbProd; prod++) {
+			producteurs[prod] = new Producteur(1, observateur, tempsMoyenProduction, 
+											deviationTempsMoyenProduction, aleaNbMsgToProd.next(), tampon, this);
+			producteurs[prod].start();
 		}
 	}
 	
@@ -150,6 +110,4 @@ public class TestProdCons extends Simulateur {
 	}	
 	
 	public static void main(String[] args){System.out.println("-----Version 2-----");new TestProdCons(new Observateur ()).start();}
-	
-	
 }
