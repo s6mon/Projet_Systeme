@@ -1,4 +1,4 @@
-package jus.poc.prodcons.v1;
+package jus.poc.prodcons.v2;
 
 import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Tampon;
@@ -12,6 +12,7 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 	private int out;
 	MessageX [] tampon;
 	private int tailleTampon;
+	private MySemaphore mutexIn, mutexOut, semProd, semCons;
 	
 	public ProdCons (int tailleTampon){
 		in = 0;
@@ -19,32 +20,40 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 		tampon = new MessageX [tailleTampon];
 		nbMessage = 0;
 		this.tailleTampon = tailleTampon;
+		mutexIn = new MySemaphore(1);
+		mutexOut = new MySemaphore(1);
+		semProd = new MySemaphore(tailleTampon);
+		semCons = new MySemaphore(0);
 	}
 	
 	public int enAttente() {
 		return nbMessage;
 	}
 
-	public synchronized Message get(_Consommateur cons) throws Exception, InterruptedException {
+	public Message get(_Consommateur cons) throws Exception, InterruptedException {
+		semCons.p();
+		mutexOut.p();
+		
 		MessageX msg;
-		while(nbMessage == 0){
-			wait();
-		}
 		nbMessage--;
 		msg = (MessageX)(tampon[out]);
 		out = (out+1)%taille();
-		notifyAll();
+		
+		mutexOut.v();
+		semProd.v();
 		return (MessageX)(msg);
 	}
 
-	public synchronized void put(_Producteur prod, Message msg) throws Exception, InterruptedException {
-		while(nbMessage == taille()){
-			wait();
-		}
+	public void put(_Producteur prod, Message msg) throws Exception, InterruptedException {
+		semProd.p();
+		mutexIn.p();
+		
 		nbMessage++;
 		tampon[in] = (MessageX)msg;
 		in = (in+1)%taille();
-		notifyAll();		
+		
+		mutexIn.v();
+		semCons.v();		
 	}
 
 	public int taille() {

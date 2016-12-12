@@ -1,4 +1,4 @@
-package jus.poc.prodcons.v1;
+package jus.poc.prodcons.v2;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -52,7 +52,7 @@ public class TestProdCons extends Simulateur {
 					if(nbProdFinit == nbProd){
 						int nb = tampon.enAttente();
 						while(nb != 0){
-							nb = tampon.enAttente();
+							System.out.println(nb);
 							try {
 								Thread.sleep(100);
 							} catch (InterruptedException e) {
@@ -117,7 +117,7 @@ public class TestProdCons extends Simulateur {
 		}
 	}	
 	
-	public static void main(String[] args){System.out.println("-----Version 1-----");new TestProdCons(new Observateur ()).start();}
+	public static void main(String[] args){System.out.println("-----Version 2-----");new TestProdCons(new Observateur ()).start();}
 	
 	
 }

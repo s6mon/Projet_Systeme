@@ -1,4 +1,5 @@
-package jus.poc.prodcons.v1;
+package jus.poc.prodcons.v2;
+
 
 import javax.swing.event.EventListenerList;
 
@@ -9,7 +10,7 @@ import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons.Aleatoire;
 import jus.poc.prodcons.Tampon;
-import jus.poc.prodcons.v1.MessageX;
+import jus.poc.prodcons.v2.MessageX;
 
 public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 
@@ -63,7 +64,7 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 		int wait;
 		
 		while(i <= nombreDeMessages()){
-
+			
 			try {
 				MessageX msgCurrent = new MessageX(identification(), i, nombreDeMessages());
 				wait = aleaWait.next();
