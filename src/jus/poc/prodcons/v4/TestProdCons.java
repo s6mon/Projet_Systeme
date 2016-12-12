@@ -1,18 +1,17 @@
-package jus.proc.prodcons.v4;
+package jus.poc.prodcons.v4;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
+import java.lang.Thread.State;
 import java.util.Properties;
 
+import jus.poc.prodcons.Aleatoire;
 import jus.poc.prodcons.ControlException;
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons.Simulateur;
 
 public class TestProdCons extends Simulateur {
 	
-	//TODO déclarer toute les variables de XML
 	static int nbProd;
 	static int nbCons;
 	static int nbBuffer;
@@ -22,17 +21,48 @@ public class TestProdCons extends Simulateur {
 	static int deviationTempsMoyenConsommation;
 	static int nbMoyenDeProduction;
 	static int deviationNbMoyenDeProduction;
-	static int nbMoyenNbExemplaire;
-	static int deviationNbMoyenNbExemplaire;
+	
+	Producteur [] producteurs;
+	Consommateur [] consommateurs;
+	
+	private ProdCons tampon;
+	private static int nbProdFinit;
+	private Consommateur consCurrent;
+	
 
 	public TestProdCons (Observateur observateur){super(observateur);}
+	
+	
 	protected void run() throws Exception {
-		//le corps du programme principal
-		String pathXML;
-		pathXML = System.getProperty("user.dir").concat("/src/jus/proc/prodcons/v1/option.xml");
-		init(pathXML);
-		System.out.println(nbCons);
 		
+		String pathXML;
+		pathXML = System.getProperty("user.dir").concat("/src/option.xml");
+		init(pathXML);
+		
+		tampon = new ProdCons(nbBuffer);
+		
+		creerConsommateur();
+		creerProducteur();
+		
+
+		
+		while(nbProdFinit > 0 || tampon.enAttente() != 0){
+			Thread.sleep(100);
+		}
+
+		System.out.println("Fermeture des cons");
+		for(int i=0; i<nbCons; i++){
+			consCurrent = consommateurs[i];
+			consCurrent.changeState();
+			while(consCurrent.getState() == State.WAITING){
+				tampon.liberer();
+			}
+			consCurrent.arret();
+		}
+	}
+	
+	public synchronized void prodFinit (){
+		nbProdFinit--;
 	}
 	
 	public void init (String file){
@@ -49,29 +79,33 @@ public class TestProdCons extends Simulateur {
 			deviationTempsMoyenConsommation = Integer.parseInt(properties.getProperty("deviationTempsMoyenConsommation"));
 			nbMoyenDeProduction = Integer.parseInt(properties.getProperty("nombreMoyenDeProduction"));
 			deviationNbMoyenDeProduction = Integer.parseInt(properties.getProperty("deviationNombreMoyenDeProduction"));
-			nbMoyenNbExemplaire = Integer.parseInt(properties.getProperty("nbMoyenNbExemplaire"));
-			deviationNbMoyenNbExemplaire = Integer.parseInt(properties.getProperty("deviationNbMoyenNbExemplaire"));
+			
+			producteurs = new Producteur[nbProd];
+			consommateurs = new Consommateur[nbCons];
+			
+			nbProdFinit = nbProd;
+			
 		} catch (IOException e){
 			e.printStackTrace();
 		}
 	}
 
 
-	
-	//TODO créer consommateur
-	/*private void creerConsommateurs() throws ControlException {
-		for (int i = 0; i < array.length; i++) {
-			Consommateur cons = new Consommateur (/*param à passer*//*);
-			this.observateur.newConsommateur(cons);
-			this.nb_consommateurs.add(cons);
+		private void creerProducteur () throws ControlException {
+		Aleatoire aleaNbMsgToProd = new Aleatoire(nbMoyenDeProduction, deviationNbMoyenDeProduction);
+		for (int prod = 0; prod < nbProd; prod++) {
+			producteurs[prod] = new Producteur(1, observateur, tempsMoyenProduction, 
+											deviationTempsMoyenProduction, aleaNbMsgToProd.next(), tampon, this);
+			producteurs[prod].start();
 		}
-	}*/
+	}
 	
+	private void creerConsommateur () throws ControlException {
+		for (int i = 0; i < nbCons; i++) {
+			consommateurs[i] = new Consommateur(0, observateur, tempsMoyenConsommation, deviationTempsMoyenConsommation, tampon);
+			consommateurs[i].start();
+		}
+	}	
 	
-	
-	
-	
-	public static void main(String[] args){new TestProdCons(new Observateur ()).start();}
-	
-	
+	public static void main(String[] args){System.out.println("-----Version 2-----");new TestProdCons(new Observateur ()).start();}
 }
