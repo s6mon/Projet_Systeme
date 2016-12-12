@@ -90,7 +90,6 @@ public class TestProdCons extends Simulateur {
 			
 			producteurs = new Producteur[nbProd];
 			consommateurs = new Consommateur[nbCons];
-			System.out.println("ici"+nbMoyenDeProduction);
 			if (nbProd==0){
 				System.exit(0);
 			}
