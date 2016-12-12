@@ -61,21 +61,23 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 		int i = 0;
 		Aleatoire aleaWait = new Aleatoire(moyenneTempsDeTraitement, deviationTempsDeTraitement);
 		int wait;
-		
-		while(i <= nombreDeMessages()){
+		System.out.println(nombreDeMessages());
+		while(i < nombreDeMessages()){
 
 			try {
-				MessageX msgCurrent = new MessageX(identification(), i, nombreDeMessages());
+				MessageX msgCurrent = new MessageX(identification(), i+1, nombreDeMessages());
 				wait = aleaWait.next();
 				sleep(wait);
 				tampon.put(this, (Message)(msgCurrent));
+				
 				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			i++;
-		}		
+		}
 		fireEtatProdChanged(false, true);
+		//System.exit(0);
 		this.interrupt();
 	}
 

@@ -13,7 +13,7 @@ import jus.poc.prodcons.Simulateur;
 
 public class TestProdCons extends Simulateur {
 	
-	//TODO déclarer toute les variables de XML
+	//TODO dï¿½clarer toute les variables de XML
 	
 	static int nbProd;
 	static int nbCons;
@@ -51,8 +51,7 @@ public class TestProdCons extends Simulateur {
 					prodFinit();
 					if(nbProdFinit == nbProd){
 						int nb = tampon.enAttente();
-						while(nb != 0){
-							nb = tampon.enAttente();
+						while(tampon.enAttente() != 0){
 							try {
 								Thread.sleep(100);
 							} catch (InterruptedException e) {
@@ -91,6 +90,10 @@ public class TestProdCons extends Simulateur {
 			
 			producteurs = new Producteur[nbProd];
 			consommateurs = new Consommateur[nbCons];
+			System.out.println("ici"+nbMoyenDeProduction);
+			if (nbProd==0){
+				System.exit(0);
+			}
 			
 		} catch (IOException e){
 			e.printStackTrace();
@@ -98,7 +101,7 @@ public class TestProdCons extends Simulateur {
 	}
 
 
-	//créer producteur
+	//crï¿½er producteur
 	private void creerProducteurs() throws ControlException {
 		Aleatoire aleaNbMsgToProd = new Aleatoire(nbMoyenDeProduction, deviationNbMoyenDeProduction);
 		for (int i = 0; i < nbProd; i++) {
