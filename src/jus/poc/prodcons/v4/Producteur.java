@@ -15,13 +15,13 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 	private int deviationNbProduction;
 	private int type;
 	private int nbMessage;
-	private Tampon tampon;
+	private Tampon [] tampons;
 	private boolean writing;
 	private TestProdCons test;
 
 	
 	protected Producteur(int type, Observateur observateur, int moyenneTempsDeTraitement,
-			int deviationTempsDeTraitement, int nbMessage, Tampon tampon, TestProdCons test) 
+			int deviationTempsDeTraitement, int nbMessage, Tampon [] tampons, TestProdCons test) 
 			throws ControlException {
 		
 		super(Acteur.typeProducteur, observateur, moyenneTempsDeTraitement, deviationTempsDeTraitement);
@@ -30,12 +30,22 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 		this.deviationNbProduction = deviationNbProduction;
 		this.type = type;
 		this.nbMessage = nbMessage;
-		this.tampon = tampon;
+		this.tampons = tampons;
 		this.test = test;
 	}
 
 	public int nombreDeMessages() {
 		return nbMessage;
+	}
+	
+	public void tamponsPut (Tampon [] tampons, MessageX msg){
+		for(int i=0; i<tampons.length; i++){
+			try {
+				tampons[i].put(this, msg);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public void run() {
@@ -50,7 +60,7 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 				writing = true;
 				wait = aleaWait.next();
 				sleep(wait);
-				tampon.put(this, (Message)(msgCurrent));
+				tamponsPut(tampons, msgCurrent);
 				writing = false;
 				
 			} catch (Exception e) {
