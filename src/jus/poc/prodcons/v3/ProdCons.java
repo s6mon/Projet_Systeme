@@ -1,6 +1,7 @@
 package jus.poc.prodcons.v3;
 
 import jus.poc.prodcons.Message;
+import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons._Consommateur;
 import jus.poc.prodcons._Producteur;
 
@@ -34,10 +35,8 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 		
 		MessageX msg = tampon[out];
 		tampon[out] = null;
-		if(msg != null){
-			System.out.println("Consommateur : "+cons.identification()+" lit son "+cons.nombreDeMessages()+"-ième message, "+msg.toString());
-		}
 		out = (out+1)%taille();
+		nbMessage--;
 		
 		mutex.v();
 		semProd.v();
@@ -50,6 +49,7 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 		
 		tampon[in] = (MessageX)msg;
 		in = (in+1)%taille();
+		nbMessage++;
 		
 		mutex.v();
 		semCons.v();		

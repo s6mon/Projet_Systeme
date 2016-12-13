@@ -45,6 +45,7 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 			
 			try {
 				msgRecut = (MessageX) tampon.get(this);
+				System.out.println("Consommateur : "+identification()+" lit son "+nombreDeMessages()+"-ieme message, "+msgRecut.toString());
 				nbMsg++;
 				wait  = aleaWait.next();
 				sleep(wait);

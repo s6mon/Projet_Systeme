@@ -38,6 +38,7 @@ public class TestProdCons extends Simulateur {
 		String pathXML;
 		pathXML = System.getProperty("user.dir").concat("/src/option.xml");
 		init(pathXML);
+		observateur.init(nbProd, nbCons, nbBuffer);
 		
 		tampon = new ProdCons(nbBuffer);
 		
@@ -53,11 +54,13 @@ public class TestProdCons extends Simulateur {
 		System.out.println("Fermeture des cons");
 		for(int i=0; i<nbCons; i++){
 			consCurrent = consommateurs[i];
-			consCurrent.changeState();
-			while(consCurrent.getState() == State.WAITING){
-				tampon.liberer();
+			if(consCurrent.isAlive()){
+				consCurrent = consommateurs[i];
+				consCurrent.changeState();
+				while(consCurrent.getState() == State.WAITING){
+					tampon.liberer();
+				}
 			}
-			consCurrent.arret();
 		}
 	}
 	
@@ -93,16 +96,23 @@ public class TestProdCons extends Simulateur {
 
 		private void creerProducteur () throws ControlException {
 		Aleatoire aleaNbMsgToProd = new Aleatoire(nbMoyenDeProduction, deviationNbMoyenDeProduction);
-		for (int prod = 0; prod < nbProd; prod++) {
-			producteurs[prod] = new Producteur(1, observateur, tempsMoyenProduction, 
+		Producteur prod;
+		for (int i = 0; i < nbProd; i++) {
+			
+			prod = new Producteur(1, observateur, tempsMoyenProduction, 
 											deviationTempsMoyenProduction, aleaNbMsgToProd.next(), tampon, this);
-			producteurs[prod].start();
+			producteurs[i] = prod;
+			observateur.newProducteur(prod);
+			producteurs[i].start();
 		}
 	}
 	
 	private void creerConsommateur () throws ControlException {
+		Consommateur cons;
 		for (int i = 0; i < nbCons; i++) {
-			consommateurs[i] = new Consommateur(0, observateur, tempsMoyenConsommation, deviationTempsMoyenConsommation, tampon);
+			cons = new Consommateur(0, observateur, tempsMoyenConsommation, deviationTempsMoyenConsommation, tampon);
+			consommateurs[i] = cons;
+			observateur.newConsommateur(cons);
 			consommateurs[i].start();
 		}
 	}	

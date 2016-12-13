@@ -1,8 +1,13 @@
 package jus.poc.prodcons.v5;
 
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 import jus.poc.prodcons.Message;
 import jus.poc.prodcons._Consommateur;
 import jus.poc.prodcons._Producteur;
+import jus.poc.prodcons.v5.MessageX;
 
 public class ProdCons implements jus.poc.prodcons.Tampon {
 
@@ -11,7 +16,8 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 	private int out;
 	MessageX [] tampon;
 	private int tailleTampon;
-	private MySemaphore mutex, semProd, semCons;
+	private Lock lock;
+	private Condition full, empty;
 	
 	public ProdCons (int tailleTampon){
 		in = 0;
@@ -19,9 +25,10 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 		tampon = new MessageX [tailleTampon];
 		nbMessage = 0;
 		this.tailleTampon = tailleTampon;
-		mutex = new MySemaphore(1);
-		semProd = new MySemaphore(tailleTampon);
-		semCons = new MySemaphore(0);
+		
+		lock = new ReentrantLock();
+		full  = lock.newCondition(); 
+		empty = lock.newCondition();
 	}
 	
 	public int enAttente() {
@@ -29,30 +36,41 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 	}
 
 	public Message get(_Consommateur cons) throws Exception, InterruptedException {
-		semCons.p();
-		mutex.p();
-		
-		MessageX msg = tampon[out];
-		tampon[out] = null;
-		if(msg != null){
-			System.out.println("Consommateur : "+cons.identification()+" lit son "+cons.nombreDeMessages()+"-ième message, "+msg.toString());
+		MessageX msg;
+		  lock.lock();
+		  try {
+		    while (nbMessage == 0){
+		      full.await();
+		    }
+		    
+			msg = (MessageX)(tampon[out]);
+			out = (out+1)%taille();
+			nbMessage--;
+			
+			empty.signal();
+			return (MessageX)(msg);
+		  }
+		  finally {
+		    lock.unlock();
+		  }
 		}
-		out = (out+1)%taille();
-		
-		mutex.v();
-		semProd.v();
-		return msg;
-	}
 
 	public void put(_Producteur prod, Message msg) throws Exception, InterruptedException {
-		semProd.p();
-		mutex.p();
 		
+	lock.lock();
+	try {
+		while(in == nbMessage){
+			empty.await();
+		}
 		tampon[in] = (MessageX)msg;
 		in = (in+1)%taille();
+		nbMessage++;
 		
-		mutex.v();
-		semCons.v();		
+		full.signal();
+	  }
+	finally {
+	    lock.unlock();
+	  }
 	}
 
 	public int taille() {
@@ -60,7 +78,9 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 	}
 	
 	public void liberer(){
-		semCons.v();
+		full.signal();
 	}
-
 }
+
+
+

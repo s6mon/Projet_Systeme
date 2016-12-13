@@ -42,11 +42,14 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 		int i = 1;
 		Aleatoire aleaWait = new Aleatoire(moyenneTempsDeTraitement, deviationTempsDeTraitement);
 		int wait;
+		boolean dernierMsg = false;
 		
 		while(i <= nombreDeMessages()){
-			
+			if(i == nombreDeMessages()){
+				dernierMsg = true;
+			}
 			try {
-				MessageX msgCurrent = new MessageX(identification(), i, nombreDeMessages());
+				MessageX msgCurrent = new MessageX(identification(), i, nombreDeMessages(), dernierMsg);
 				wait = aleaWait.next();
 				sleep(wait);
 				tampon.put(this, (Message)(msgCurrent));

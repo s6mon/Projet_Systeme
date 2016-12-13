@@ -48,6 +48,10 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 				nbMsg++;
 				wait  = aleaWait.next();
 				sleep(wait);
+				/*if(msgRecut.getIsFin()){
+					System.out.println("cons : "+this.identification()+" est finit");
+					this.interrupt();
+				}*/
 			}
 			catch (InterruptedException e) {
 				this.interrupt();
@@ -57,6 +61,7 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 				e.printStackTrace();
 			}
 		}
+		System.out.println("cons : "+this.identification()+" à finit");
 		
 	}
 	
