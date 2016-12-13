@@ -50,14 +50,17 @@ public class TestProdCons extends Simulateur {
 			Thread.sleep(100);
 		}
 
-		System.out.println("Fermeture des cons");
+		System.out.println("Prog finit");
+
 		for(int i=0; i<nbCons; i++){
 			consCurrent = consommateurs[i];
-			consCurrent.changeState();
-			while(consCurrent.getState() == State.WAITING){
-				tampon.liberer();
+			if(consCurrent.isAlive()){
+				consCurrent = consommateurs[i];
+				consCurrent.changeState();
+				while(consCurrent.getState() == State.WAITING){
+					tampon.liberer();
+				}
 			}
-			consCurrent.arret();
 		}
 	}
 	

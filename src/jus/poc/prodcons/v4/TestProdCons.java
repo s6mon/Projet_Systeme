@@ -61,11 +61,13 @@ public class TestProdCons extends Simulateur {
 		System.out.println("Fermeture des cons");
 		for(int i=0; i<nbCons; i++){
 			consCurrent = consommateurs[i];
-			consCurrent.changeState();
-			while(consCurrent.getState() == State.WAITING){
-				tamponsFree(tampons);
+			if(consCurrent.isAlive()){
+				consCurrent = consommateurs[i];
+				consCurrent.changeState();
+				while(consCurrent.getState() == State.WAITING){
+					tamponsFree(tampons);
+				}
 			}
-			consCurrent.arret();
 		}
 	}
 	
@@ -82,6 +84,8 @@ public class TestProdCons extends Simulateur {
 		}
 		return (nbVide == tampons.length);
 	}
+	
+	
 	public void tamponsFree (ProdCons [] tampons){
 		for(int i=0; i<tampons.length; i++){
 			tampons[i].liberer();

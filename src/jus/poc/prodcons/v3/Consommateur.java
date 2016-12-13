@@ -44,9 +44,8 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 		
 		while(work){
 			
-			try {
-				msgRecut = (MessageX) tampon.get(this);
-				nbMsg++;
+			
+			try{
 				wait  = aleaWait.next();
 				sleep(wait);
 				observateur.consommationMessage(this,msgRecut,wait);
@@ -56,11 +55,22 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 				break;
 			}
 			catch (Exception e){
+				msgRecut = (MessageX) tampon.get(this);
+				observateur.retraitMessage(this, msgRecut);
+				if(msgRecut != null){
+					System.out.println("Consommateur : "+identification()+" lit son "+nombreDeMessages()+"-i�me message, "+msgRecut.toString());
+				}
+				observateur.consommationMessage(this, msgRecut, wait);
+				nbMsg++;
+			} 
+			catch (InterruptedException e){
 				e.printStackTrace();
 			}
+			
 		}
-		
 	}
+	
+	
 	
 	public void arret() {
 		this.interrupt();

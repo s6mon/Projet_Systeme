@@ -50,7 +50,6 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 				wait = aleaWait.next();
 				sleep(wait);
 				tampon.put(this, (Message)(msgCurrent));
-			
 				
 			} catch (Exception e) {
 				e.printStackTrace();
