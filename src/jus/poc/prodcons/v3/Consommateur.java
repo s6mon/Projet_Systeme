@@ -16,10 +16,10 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 	private boolean work;
 	
 	
-	Tampon tampon;
+	ProdCons tampon;
 
 	protected Consommateur(int type, Observateur observateur, int moyenneTempsDeTraitement,
-			int deviationTempsDeTraitement, Tampon tampon)
+			int deviationTempsDeTraitement, ProdCons tampon)
 				
 		throws ControlException {
 		super(Acteur.typeConsommateur, observateur, moyenneTempsDeTraitement, deviationTempsDeTraitement);
@@ -43,18 +43,17 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 		int wait;
 		
 		while(work){
-			
-			
 			try{
 				wait  = aleaWait.next();
-				sleep(wait);
+				
 				msgRecut = (MessageX) tampon.get(this);
-				observateur.consommationMessage(this, msgRecut, wait);
-				observateur.retraitMessage(this, msgRecut);
+				sleep(wait);
+				tampon.observateur().consommationMessage(this, msgRecut, wait);
 				if(msgRecut != null){
-					System.out.println("Consommateur : "+identification()+" lit son "+nombreDeMessages()+"-ieme message, "+msgRecut.toString());
+					System.out.println("Consommateur : "+identification()+" lit son "+nombreDeMessages()+" ieme message, "+msgRecut.toString());
 				}
 				observateur.consommationMessage(this, msgRecut, wait);
+				
 				nbMsg++;
 			}
 			catch (InterruptedException e){

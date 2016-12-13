@@ -40,7 +40,7 @@ public class TestProdCons extends Simulateur {
 		init(pathXML);
 		observateur.init(nbProd, nbCons, nbBuffer);
 		
-		tampon = new ProdCons(nbBuffer);
+		tampon = new ProdCons(nbBuffer, observateur);
 		
 		creerConsommateur();
 		creerProducteur();
@@ -60,6 +60,7 @@ public class TestProdCons extends Simulateur {
 				while(consCurrent.getState() == State.WAITING){
 					tampon.liberer();
 				}
+				System.out.println("cons : "+consCurrent.identification()+" is down");
 			}
 		}
 	}

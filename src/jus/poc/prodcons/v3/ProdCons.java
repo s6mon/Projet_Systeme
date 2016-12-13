@@ -10,17 +10,18 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 	int nbMessage;
 	private int in;
 	private int out;
+	private Observateur observateur;
 	MessageX [] tampon;
 	private int tailleTampon;
 	private MySemaphore mutex, semProd, semCons;
-	Observateur observateur;
 	
-	public ProdCons (int tailleTampon){
+	public ProdCons (int tailleTampon, Observateur observateur){
 		in = 0;
 		out = 0;
 		tampon = new MessageX [tailleTampon];
 		nbMessage = 0;
 		this.tailleTampon = tailleTampon;
+		this.observateur = observateur;
 		mutex = new MySemaphore(1);
 		semProd = new MySemaphore(tailleTampon);
 		semCons = new MySemaphore(0);
@@ -35,12 +36,15 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 		mutex.p();
 		
 		MessageX msg = tampon[out];
-		tampon[out] = null;
 		if(msg != null){
-			System.out.println("Consommateur : "+cons.identification()+" lit son "+cons.nombreDeMessages()+"-i�me message, "+msg.toString());
+			observateur.retraitMessage(cons, msg);
 		}
+		
+		
+		tampon[out] = null;
 		out = (out+1)%taille();
 		nbMessage--;
+		
 		mutex.v();
 		semProd.v();
 		return msg;
@@ -65,6 +69,10 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 	
 	public void liberer(){
 		semCons.v();
+	}
+	
+	public Observateur observateur(){
+		return this.observateur;
 	}
 
 }
