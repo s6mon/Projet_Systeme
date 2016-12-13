@@ -57,11 +57,13 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 
 	public void put(_Producteur prod, Message msg) throws Exception, InterruptedException {
 		
+		System.out.println("prod : "+prod.identification()+" demande le verrou");
 	lock.lock();
 	try {
-		while(in == nbMessage){
+		while(nbMessage == taille()){
 			empty.await();
 		}
+		System.out.println("prod : "+prod.identification()+" a le verrou");
 		tampon[in] = (MessageX)msg;
 		in = (in+1)%taille();
 		nbMessage++;
@@ -73,9 +75,11 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 	  }
 	}
 
+	
 	public int taille() {
 		return tailleTampon;
 	}
+	
 	
 	public void liberer(){
 		full.signal();

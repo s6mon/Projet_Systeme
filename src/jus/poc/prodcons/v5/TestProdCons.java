@@ -55,10 +55,8 @@ public class TestProdCons extends Simulateur {
 			consCurrent = consommateurs[i];
 			consCurrent.changeState();
 			while(consCurrent.getState() == State.WAITING){
-				System.out.println("foiréee");
-				//tampon.liberer();
+				tampon.liberer();
 			}
-			consCurrent.arret();
 		}
 	}
 	
