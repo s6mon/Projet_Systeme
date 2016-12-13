@@ -50,10 +50,10 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 				sleep(wait);
 				observateur.consommationMessage(this,msgRecut,wait);
 			}
-			catch (InterruptedException e) {
-				this.interrupt();
-				break;
-			}
+//			catch (InterruptedException e) {
+	//			this.interrupt();
+		//		break;
+			//}
 			catch (Exception e){
 				msgRecut = (MessageX) tampon.get(this);
 				observateur.retraitMessage(this, msgRecut);
@@ -62,12 +62,11 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 				}
 				observateur.consommationMessage(this, msgRecut, wait);
 				nbMsg++;
-			} 
-			catch (InterruptedException e){
-				e.printStackTrace();
 			}
+			// catch (InterruptedException e){
+				//e.printStackTrace();
+			//}
 			
-		}
 	}
 	
 	
