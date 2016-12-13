@@ -124,7 +124,7 @@ public class TestProdCons extends Simulateur {
 		Aleatoire aleaNbMsgToProd = new Aleatoire(nbMoyenDeProduction, deviationNbMoyenDeProduction);
 		for (int prod = 0; prod < nbProd; prod++) {
 			producteurs[prod] = new Producteur(1, observateur, tempsMoyenProduction, 
-											deviationTempsMoyenProduction, aleaNbMsgToProd.next(), tampons, this);
+											deviationTempsMoyenProduction, aleaNbMsgToProd.next(), tampons, this, nombreMoyenNbExemplaire, deviationNombreMoyenNbExemplaire);
 			producteurs[prod].start();
 		}
 	}

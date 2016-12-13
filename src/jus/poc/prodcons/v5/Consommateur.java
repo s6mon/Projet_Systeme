@@ -1,4 +1,4 @@
-package jus.poc.prodcons.v4;
+package jus.poc.prodcons.v5;
 
 import jus.poc.prodcons.Acteur;
 import jus.poc.prodcons.Aleatoire;
@@ -15,10 +15,10 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 	private boolean work;
 	
 	
-	Tampon [] tampons;
+	Tampon tampon;
 
 	protected Consommateur(int type, Observateur observateur, int moyenneTempsDeTraitement,
-			int deviationTempsDeTraitement, Tampon [] tampons)
+			int deviationTempsDeTraitement, Tampon tampon)
 				
 		throws ControlException {
 		super(Acteur.typeConsommateur, observateur, moyenneTempsDeTraitement, deviationTempsDeTraitement);
@@ -26,7 +26,7 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 		this.type = type;
 		this.moyenneTempsDeTraitement = moyenneTempsDeTraitement;
 		this.deviationTempsDeTraitement = deviationTempsDeTraitement;
-		this.tampons = tampons;
+		this.tampon = tampon;
 		nbMsg = 0;
 		work = true;
 	}
@@ -34,19 +34,6 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 
 	public int nombreDeMessages() {
 		return nbMsg;
-	}
-	
-	public MessageX [] tamponsGet (Tampon [] tampons){
-		MessageX [] msgs = new MessageX[tampons.length];
-		for(int i=0; i<tampons.length; i++){
-			try {
-				msgs[i] = (MessageX) tampons[i].get(this);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return msgs;
 	}
 
 	public void run() {
@@ -56,7 +43,19 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 		
 		while(work){
 			
-			tamponsGet(tampons);
+			try {
+				msgRecut = (MessageX) tampon.get(this);
+				nbMsg++;
+				wait  = aleaWait.next();
+				sleep(wait);
+			}
+			catch (InterruptedException e) {
+				this.interrupt();
+				break;
+			}
+			catch (Exception e){
+				e.printStackTrace();
+			}
 		}
 		
 	}

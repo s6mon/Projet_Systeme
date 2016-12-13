@@ -12,7 +12,6 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 	private int moyenneTempsDeTraitement;
 	private int deviationTempsDeTraitement;
 	private int nbMsg;
-	private boolean reading;
 	private boolean work;
 	
 	

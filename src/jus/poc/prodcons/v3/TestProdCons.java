@@ -1,4 +1,4 @@
-package jus.poc.prodcons.v2;
+package jus.poc.prodcons.v3;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -107,5 +107,5 @@ public class TestProdCons extends Simulateur {
 		}
 	}	
 	
-	public static void main(String[] args){System.out.println("-----Version 2-----");new TestProdCons(new Observateur ()).start();}
+	public static void main(String[] args){System.out.println("-----Version 3-----");new TestProdCons(new Observateur ()).start();}
 }
