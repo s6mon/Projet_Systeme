@@ -2,8 +2,6 @@ package jus.poc.prodcons.v1;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.util.Properties;
 
 import jus.poc.prodcons.Aleatoire;
@@ -90,9 +88,7 @@ public class TestProdCons extends Simulateur {
 			
 			producteurs = new Producteur[nbProd];
 			consommateurs = new Consommateur[nbCons];
-			if (nbProd==0){
-				System.exit(0);
-			}
+			
 			
 		} catch (IOException e){
 			e.printStackTrace();
@@ -117,7 +113,19 @@ public class TestProdCons extends Simulateur {
 			cons.start();
 			consommateurs[i] = cons;
 		}
-	}	
+	}
+	
+	public void preCondition(){
+		if (nbProd==0){ //on test qu'il y ai au moins un producteur
+			System.exit(0);
+		}
+		if(nbMoyenDeProduction < deviationNbMoyenDeProduction){//on vérifie qu'on ne peut pas avoir un nb de msg négatif
+			System.exit(0);
+		}
+		if(!(nbBuffer > 0)){//si le buffer n'est pas plus grand 
+			System.exit(0);
+		}
+	}
 	
 	public static void main(String[] args){System.out.println("-----Version 1-----");new TestProdCons(new Observateur ()).start();}
 	

@@ -1,7 +1,6 @@
-package jus.poc.prodcons.v3;
+package jus.poc.prodcons.v4;
 
 import jus.poc.prodcons.Message;
-import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons._Consommateur;
 import jus.poc.prodcons._Producteur;
 
@@ -13,7 +12,6 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 	MessageX [] tampon;
 	private int tailleTampon;
 	private MySemaphore mutex, semProd, semCons;
-	Observateur observateur;
 	
 	public ProdCons (int tailleTampon){
 		in = 0;
@@ -37,9 +35,10 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 		MessageX msg = tampon[out];
 		tampon[out] = null;
 		if(msg != null){
-			System.out.println("Consommateur : "+cons.identification()+" lit son "+cons.nombreDeMessages()+"-iï¿½me message, "+msg.toString());
+			System.out.println("Consommateur : "+cons.identification()+" lit son "+cons.nombreDeMessages()+"-ième message, "+msg.toString());
 		}
 		out = (out+1)%taille();
+		
 		mutex.v();
 		semProd.v();
 		return msg;
@@ -50,7 +49,6 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 		mutex.p();
 		
 		tampon[in] = (MessageX)msg;
-		observateur.depotMessage(prod, msg);
 		in = (in+1)%taille();
 		
 		mutex.v();

@@ -1,18 +1,14 @@
 package jus.poc.prodcons.v3;
 
-import jus.poc.prodcons.*;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.Thread.State;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.util.Properties;
 
 import jus.poc.prodcons.Aleatoire;
 import jus.poc.prodcons.ControlException;
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons.Simulateur;
-import jus.poc.prodcons.Tampon;
 
 public class TestProdCons extends Simulateur {
 	
@@ -25,8 +21,6 @@ public class TestProdCons extends Simulateur {
 	static int deviationTempsMoyenConsommation;
 	static int nbMoyenDeProduction;
 	static int deviationNbMoyenDeProduction;
-	Observateur observateur;
-	private int type;
 	
 	Producteur [] producteurs;
 	Consommateur [] consommateurs;
@@ -47,20 +41,9 @@ public class TestProdCons extends Simulateur {
 		
 		tampon = new ProdCons(nbBuffer);
 		
-		//Initialisation class Observateur
-		observateur.init(nbProd, nbCons, nbBuffer);
+		creerConsommateur();
+		creerProducteur();
 		
-		//Initialisation des producteurs
-		for (int i=0;i< nbProd; i++){
-			producteurs[i]=(new Producteur(type,observateur,tempsMoyenProduction,deviationTempsMoyenProduction, nbBuffer, tampon, this));
-			observateur.newProducteur(producteurs[i]);
-		}
-		
-		//Initialisation des consommateurs
-		for (int i=0;i<nbCons;i++){
-			//consommateurs[i]=(new Consommateur(type,observateur, tempsMoyenConsommation ,deviationTempsMoyenConsommation,tampon, this));
-			observateur.newConsommateur(consommateurs[i]);
-		}
 
 		
 		while(nbProdFinit > 0 || tampon.enAttente() != 0){
@@ -124,5 +107,5 @@ public class TestProdCons extends Simulateur {
 		}
 	}	
 	
-	public static void main(String[] args){System.out.println("-----Version 2-----");new TestProdCons(new Observateur ()).start();}
+	public static void main(String[] args){System.out.println("-----Version 3-----");new TestProdCons(new Observateur ()).start();}
 }

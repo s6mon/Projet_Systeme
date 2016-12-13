@@ -76,8 +76,6 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 			i++;
 		}
 		fireEtatProdChanged(false, true);
-		//System.exit(0);
-		this.interrupt();
 	}
 
 }

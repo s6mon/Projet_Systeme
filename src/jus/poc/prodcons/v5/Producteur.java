@@ -1,7 +1,6 @@
-package jus.poc.prodcons.v3;
+package jus.poc.prodcons.v5;
 
 
-import javax.swing.event.EventListenerList;
 import jus.poc.prodcons.Acteur;
 
 import jus.poc.prodcons.ControlException;
@@ -9,7 +8,7 @@ import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons.Aleatoire;
 import jus.poc.prodcons.Tampon;
-import jus.poc.prodcons.v3.MessageX;
+import jus.poc.prodcons.v5.MessageX;
 
 public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 
@@ -18,9 +17,7 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 	private int type;
 	private int nbMessage;
 	private Tampon tampon;
-	private boolean writing;
 	private TestProdCons test;
-	Observateur observateur;
 
 	
 	protected Producteur(int type, Observateur observateur, int moyenneTempsDeTraitement,
@@ -50,15 +47,10 @@ public class Producteur extends Acteur implements jus.poc.prodcons._Producteur {
 			
 			try {
 				MessageX msgCurrent = new MessageX(identification(), i, nombreDeMessages());
-				writing = true;
-				wait = aleaWait.next();
-				sleep(wait);
-				observateur.productionMessage(this,msgCurrent,wait);
-				tampon.put(this, (Message)(msgCurrent));
-				writing = false;
 				wait = aleaWait.next();
 				sleep(wait);
 				tampon.put(this, (Message)(msgCurrent));
+			
 				
 			} catch (Exception e) {
 				e.printStackTrace();
