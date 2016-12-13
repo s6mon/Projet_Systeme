@@ -58,7 +58,7 @@ public class Consommateur extends Acteur implements jus.poc.prodcons._Consommate
 				msgRecut = (MessageX) tampon.get(this);
 				observateur.retraitMessage(this, msgRecut);
 				if(msgRecut != null){
-					System.out.println("Consommateur : "+identification()+" lit son "+nombreDeMessages()+"-i�me message, "+msgRecut.toString());
+					System.out.println("Consommateur : "+identification()+" lit son "+nombreDeMessages()+"-ieme message, "+msgRecut.toString());
 				}
 				observateur.consommationMessage(this, msgRecut, wait);
 				nbMsg++;

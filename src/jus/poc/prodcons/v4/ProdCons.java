@@ -35,7 +35,7 @@ public class ProdCons implements jus.poc.prodcons.Tampon {
 		MessageX msg = tampon[out];
 		tampon[out] = null;
 		if(msg != null){
-			System.out.println("Consommateur : "+cons.identification()+" lit son "+cons.nombreDeMessages()+"-ième message, "+msg.toString());
+			System.out.println("Consommateur : "+cons.identification()+" lit son "+cons.nombreDeMessages()+"-ieme message, "+msg.toString());
 		}
 		out = (out+1)%taille();
 		nbMessage--;
